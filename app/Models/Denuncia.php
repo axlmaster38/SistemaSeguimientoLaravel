@@ -19,11 +19,19 @@ class Denuncia extends Model
         'justificacion',
         'estado_denuncia',
         'denuncia_antigua',
+        'estado_registro',
         'estudiante_id',
         'usuario_registra_evalua_id',
         'usuario_actualiza_id',
         'fecha_registro',
         'fecha_actualiza',
+    ];
+
+    protected $casts = [
+        'fecha_creacion' => 'datetime',
+        'denuncia_antigua' => 'boolean',
+        'fecha_registro' => 'datetime',
+        'fecha_actualiza' => 'datetime',
     ];
 
     public function estudiante(): BelongsTo

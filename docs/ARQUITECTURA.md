@@ -84,6 +84,29 @@ Definicion operativa:
 - Denuncia activa: denuncia cuyo `estado_denuncia` no esta en estados finales o inactivos conocidos.
 - Proceso disciplinario activo: proceso cuyo `estado_proceso` no esta en estados finales o inactivos conocidos.
 
+## Denuncias
+
+En Sprint 8 se extiende `estado_registro` a `denuncias`.
+
+Reglas:
+
+- No se eliminan fisicamente denuncias.
+- La accion de eliminar se reemplaza por cambio de `estado_registro`.
+- `estado_denuncia` es un estado funcional del negocio.
+- `estado_registro` es el estado tecnico para activar o inactivar el registro.
+- Solo se pueden crear denuncias para estudiantes con `estado_registro = Activo`.
+- No se puede inactivar una denuncia si tiene procesos disciplinarios activos asociados.
+- Solo `Administrador` puede cambiar `estado_registro`.
+- `Operador` puede crear, consultar y editar.
+
+Estados funcionales sugeridos para `estado_denuncia`:
+
+- Recibida
+- En evaluación
+- Admitida
+- Rechazada
+- Archivada
+
 ## Compatibilidad
 
 Las decisiones de implementacion deben mantenerse compatibles con:

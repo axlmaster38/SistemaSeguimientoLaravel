@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CentroController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DenunciaController;
 use App\Http\Controllers\EscuelaController;
 use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\PeriodoAcademicoController;
@@ -48,4 +49,8 @@ Route::middleware('autenticado')->group(function () {
     Route::delete('estudiantes/{estudiante}', [EstudianteController::class, 'destroy'])
         ->middleware('rol:Administrador')
         ->name('estudiantes.destroy');
+    Route::resource('denuncias', DenunciaController::class)->except('destroy');
+    Route::delete('denuncias/{denuncia}', [DenunciaController::class, 'destroy'])
+        ->middleware('rol:Administrador')
+        ->name('denuncias.destroy');
 });
