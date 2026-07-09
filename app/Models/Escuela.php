@@ -14,6 +14,7 @@ class Escuela extends Model
     protected $fillable = [
         'sigla',
         'nombre',
+        'estado_registro',
     ];
 
     public function programas(): HasMany

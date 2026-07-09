@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Estudiante extends Model
@@ -49,6 +50,16 @@ class Estudiante extends Model
     public function usuarioActualiza(): BelongsTo
     {
         return $this->belongsTo(Usuario::class, 'usuario_actualiza_id');
+    }
+
+    public function denuncias(): HasMany
+    {
+        return $this->hasMany(Denuncia::class);
+    }
+
+    public function historicos(): HasMany
+    {
+        return $this->hasMany(HistoricoEstudiante::class);
     }
 
     public function setNombreAttribute(string $value): void

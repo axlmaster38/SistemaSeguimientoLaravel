@@ -64,4 +64,29 @@ class ProcesoDisciplinario extends Model
     {
         return $this->hasMany(HistoricoEstudiante::class);
     }
+
+    public function descargos(): HasMany
+    {
+        return $this->hasMany(Descargo::class);
+    }
+
+    public function pruebas(): HasMany
+    {
+        return $this->hasMany(Prueba::class);
+    }
+
+    public function decisiones(): HasMany
+    {
+        return $this->hasMany(Decision::class);
+    }
+
+    public function notificaciones(): HasMany
+    {
+        return $this->hasMany(Notificacion::class);
+    }
+
+    public function apelaciones(): HasMany
+    {
+        return $this->hasMany(Apelacion::class);
+    }
 }

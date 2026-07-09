@@ -42,4 +42,9 @@ class Programa extends Model
     {
         return $this->hasMany(Estudiante::class);
     }
+
+    public function historicosEstudiantes(): HasMany
+    {
+        return $this->hasMany(HistoricoEstudiante::class);
+    }
 }
