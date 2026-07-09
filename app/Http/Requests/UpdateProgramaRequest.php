@@ -26,8 +26,7 @@ class UpdateProgramaRequest extends FormRequest
             'nombre' => [
                 'required',
                 'string',
-                'max:30',
-                Rule::unique('programas', 'nombre')->ignore($programaId),
+                'max:150',
             ],
             'escuela_id' => ['required', 'integer', 'exists:escuelas,id'],
         ];

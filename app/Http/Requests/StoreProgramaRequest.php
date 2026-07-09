@@ -15,7 +15,7 @@ class StoreProgramaRequest extends FormRequest
     {
         return [
             'codigo_pro' => ['required', 'string', 'max:12', 'unique:programas,codigo_pro'],
-            'nombre' => ['required', 'string', 'max:30', 'unique:programas,nombre'],
+            'nombre' => ['required', 'string', 'max:150'],
             'escuela_id' => ['required', 'integer', 'exists:escuelas,id'],
         ];
     }
