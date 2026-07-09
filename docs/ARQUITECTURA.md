@@ -61,6 +61,29 @@ Definicion operativa:
 - Estudiante activo: `estudiantes.estado_academico = Activo`.
 - Centro activo: `centros.estado_registro = Activo`.
 
+## Periodos academicos y estudiantes
+
+En Sprint 7 se extiende `estado_registro` a:
+
+- `periodos_academicos`
+- `estudiantes`
+
+Reglas:
+
+- No se eliminan fisicamente periodos academicos ni estudiantes.
+- La accion de eliminar se reemplaza por cambio de `estado_registro`.
+- Por defecto los listados muestran registros `Activo`.
+- Los listados permiten filtrar por `Activo`, `Inactivo` o `Todos`.
+- Solo `Administrador` puede cambiar `estado_registro`.
+- `Operador` puede crear, consultar y editar.
+- No se puede inactivar un estudiante si tiene denuncias activas.
+- No se puede inactivar un estudiante si tiene procesos disciplinarios activos.
+
+Definicion operativa:
+
+- Denuncia activa: denuncia cuyo `estado_denuncia` no esta en estados finales o inactivos conocidos.
+- Proceso disciplinario activo: proceso cuyo `estado_proceso` no esta en estados finales o inactivos conocidos.
+
 ## Compatibilidad
 
 Las decisiones de implementacion deben mantenerse compatibles con:

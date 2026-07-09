@@ -17,7 +17,12 @@
         <a class="nav-link rounded {{ request()->routeIs('centros.*') ? 'active' : '' }}" href="{{ route('centros.index') }}">
             <i class="fa-solid fa-building-columns me-2"></i>Centros
         </a>
-        <a class="nav-link rounded" href="#"><i class="fa-solid fa-user-graduate me-2"></i>Estudiantes</a>
+        <a class="nav-link rounded {{ request()->routeIs('periodos-academicos.*') ? 'active' : '' }}" href="{{ route('periodos-academicos.index') }}">
+            <i class="fa-solid fa-calendar-days me-2"></i>Periodos academicos
+        </a>
+        <a class="nav-link rounded {{ request()->routeIs('estudiantes.*') ? 'active' : '' }}" href="{{ route('estudiantes.index') }}">
+            <i class="fa-solid fa-user-graduate me-2"></i>Estudiantes
+        </a>
 
         <div class="nav-title small text-uppercase mt-3 mb-1">Procesos Disciplinarios</div>
         <a class="nav-link rounded" href="#"><i class="fa-solid fa-file-circle-exclamation me-2"></i>Denuncias</a>

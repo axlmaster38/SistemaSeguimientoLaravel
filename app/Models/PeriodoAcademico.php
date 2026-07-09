@@ -19,10 +19,18 @@ class PeriodoAcademico extends Model
         'anio',
         'fecha_inicio',
         'fecha_fin',
+        'estado_registro',
         'usuario_registra_id',
         'usuario_actualiza_id',
         'fecha_registro',
         'fecha_actualiza',
+    ];
+
+    protected $casts = [
+        'fecha_inicio' => 'datetime',
+        'fecha_fin' => 'datetime',
+        'fecha_registro' => 'datetime',
+        'fecha_actualiza' => 'datetime',
     ];
 
     public function usuarioRegistra(): BelongsTo

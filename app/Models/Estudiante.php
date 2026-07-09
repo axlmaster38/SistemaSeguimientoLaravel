@@ -24,12 +24,18 @@ class Estudiante extends Model
         'email_alternativo',
         'telefono',
         'direccion',
+        'estado_registro',
         'centro_id',
         'programa_id',
         'usuario_registra_id',
         'usuario_actualiza_id',
         'fecha_registro',
         'fecha_actualiza',
+    ];
+
+    protected $casts = [
+        'fecha_registro' => 'datetime',
+        'fecha_actualiza' => 'datetime',
     ];
 
     public function centro(): BelongsTo
