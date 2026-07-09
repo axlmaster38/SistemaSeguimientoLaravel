@@ -18,11 +18,19 @@ class ProcesoDisciplinario extends Model
         'fecha_apertura',
         'estado_proceso',
         'proceso_antiguo',
+        'estado_registro',
         'denuncia_id',
         'usuario_registra_id',
         'usuario_actualiza_id',
         'fecha_registro',
         'fecha_actualiza',
+    ];
+
+    protected $casts = [
+        'fecha_apertura' => 'date',
+        'proceso_antiguo' => 'boolean',
+        'fecha_registro' => 'datetime',
+        'fecha_actualiza' => 'datetime',
     ];
 
     public function denuncia(): BelongsTo

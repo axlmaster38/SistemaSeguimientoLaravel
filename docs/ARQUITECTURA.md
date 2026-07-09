@@ -107,6 +107,30 @@ Estados funcionales sugeridos para `estado_denuncia`:
 - Rechazada
 - Archivada
 
+## Procesos disciplinarios
+
+En Sprint 9 se extiende `estado_registro` a `procesos_disciplinarios`.
+
+Reglas:
+
+- No se eliminan fisicamente procesos disciplinarios.
+- La accion de eliminar se reemplaza por cambio de `estado_registro`.
+- `estado_proceso` es un estado funcional del negocio.
+- `estado_registro` es el estado tecnico para activar o inactivar el registro.
+- Solo se pueden crear procesos para denuncias con `estado_registro = Activo`.
+- No se permite crear mas de un proceso activo para la misma denuncia.
+- Al crear o editar un proceso se sincronizan sus tipologias de falta y articulos.
+- Al crear o editar un proceso se crea o actualiza `historico_estudiantes` con el estudiante de la denuncia y el programa actual del estudiante.
+- Solo `Administrador` puede cambiar `estado_registro`.
+- `Operador` puede crear, consultar y editar.
+
+Estados funcionales sugeridos para `estado_proceso`:
+
+- En estudio
+- Abierto
+- Cerrado
+- Archivado
+
 ## Compatibilidad
 
 Las decisiones de implementacion deben mantenerse compatibles con:

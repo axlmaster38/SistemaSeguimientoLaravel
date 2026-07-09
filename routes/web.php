@@ -8,6 +8,7 @@ use App\Http\Controllers\DenunciaController;
 use App\Http\Controllers\EscuelaController;
 use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\PeriodoAcademicoController;
+use App\Http\Controllers\ProcesoDisciplinarioController;
 use App\Http\Controllers\ProgramaController;
 use App\Http\Controllers\ZonaController;
 use Illuminate\Support\Facades\Route;
@@ -56,4 +57,8 @@ Route::middleware('autenticado')->group(function () {
     Route::delete('denuncias/{denuncia}', [DenunciaController::class, 'destroy'])
         ->middleware('rol:Administrador')
         ->name('denuncias.destroy');
+    Route::resource('procesos', ProcesoDisciplinarioController::class)->except('destroy');
+    Route::delete('procesos/{proceso}', [ProcesoDisciplinarioController::class, 'destroy'])
+        ->middleware('rol:Administrador')
+        ->name('procesos.destroy');
 });

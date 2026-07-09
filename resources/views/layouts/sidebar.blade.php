@@ -28,7 +28,9 @@
         <a class="nav-link rounded {{ request()->routeIs('denuncias.*') ? 'active' : '' }}" href="{{ route('denuncias.index') }}">
             <i class="fa-solid fa-file-circle-exclamation me-2"></i>Denuncias
         </a>
-        <a class="nav-link rounded" href="#"><i class="fa-solid fa-folder-open me-2"></i>Procesos</a>
+        <a class="nav-link rounded {{ request()->routeIs('procesos.*') ? 'active' : '' }}" href="{{ route('procesos.index') }}">
+            <i class="fa-solid fa-folder-open me-2"></i>Procesos
+        </a>
         <a class="nav-link rounded" href="#"><i class="fa-solid fa-comment-dots me-2"></i>Descargos</a>
         <a class="nav-link rounded" href="#"><i class="fa-solid fa-paperclip me-2"></i>Pruebas</a>
         <a class="nav-link rounded" href="#"><i class="fa-solid fa-check-to-slot me-2"></i>Decisiones</a>
