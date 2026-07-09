@@ -27,8 +27,17 @@
         @error('estado_academico')<div class="invalid-feedback">{{ $message }}</div>@enderror
     </div>
     <div class="col-12 col-md-4">
+        <label for="zona_id" class="form-label">Zona</label>
+        <select id="zona_id" name="zona_id" class="form-select">
+            <option value="">Seleccione una zona</option>
+            @foreach ($zonas as $zona)
+                <option value="{{ $zona->id }}" @selected((int) old('zona_id', $zonaSeleccionada) === $zona->id)>{{ $zona->nombre }}</option>
+            @endforeach
+        </select>
+    </div>
+    <div class="col-12 col-md-4">
         <label for="centro_id" class="form-label">Centro</label>
-        <select id="centro_id" name="centro_id" class="form-select @error('centro_id') is-invalid @enderror" required>
+        <select id="centro_id" name="centro_id" class="form-select @error('centro_id') is-invalid @enderror" data-selected="{{ old('centro_id', $estudiante->centro_id) }}" required @disabled(! old('zona_id', $zonaSeleccionada))>
             <option value="">Seleccione un centro</option>
             @foreach ($centros as $centro)
                 <option value="{{ $centro->id }}" @selected((int) old('centro_id', $estudiante->centro_id) === $centro->id)>{{ $centro->centro }}</option>
@@ -37,8 +46,17 @@
         @error('centro_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
     </div>
     <div class="col-12 col-md-4">
+        <label for="escuela_id" class="form-label">Escuela</label>
+        <select id="escuela_id" name="escuela_id" class="form-select">
+            <option value="">Seleccione una escuela</option>
+            @foreach ($escuelas as $escuela)
+                <option value="{{ $escuela->id }}" @selected((int) old('escuela_id', $escuelaSeleccionada) === $escuela->id)>{{ $escuela->sigla }} - {{ $escuela->nombre }}</option>
+            @endforeach
+        </select>
+    </div>
+    <div class="col-12 col-md-4">
         <label for="programa_id" class="form-label">Programa</label>
-        <select id="programa_id" name="programa_id" class="form-select @error('programa_id') is-invalid @enderror" required>
+        <select id="programa_id" name="programa_id" class="form-select @error('programa_id') is-invalid @enderror" data-selected="{{ old('programa_id', $estudiante->programa_id) }}" required @disabled(! old('escuela_id', $escuelaSeleccionada))>
             <option value="">Seleccione un programa</option>
             @foreach ($programas as $programa)
                 <option value="{{ $programa->id }}" @selected((int) old('programa_id', $estudiante->programa_id) === $programa->id)>{{ $programa->codigo_pro }} - {{ $programa->nombre }}</option>
@@ -77,3 +95,75 @@
     <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk me-1"></i>Guardar</button>
     <a href="{{ route('estudiantes.index') }}" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left me-1"></i>Volver</a>
 </div>
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const zonaSelect = document.getElementById('zona_id');
+            const centroSelect = document.getElementById('centro_id');
+            const escuelaSelect = document.getElementById('escuela_id');
+            const programaSelect = document.getElementById('programa_id');
+
+            const setOptions = (select, items, selectedValue, emptyText, formatter) => {
+                select.innerHTML = '';
+
+                if (!items.length) {
+                    select.append(new Option(emptyText, ''));
+                    select.disabled = true;
+                    return;
+                }
+
+                select.append(new Option(select === centroSelect ? 'Seleccione un centro' : 'Seleccione un programa', ''));
+                items.forEach((item) => {
+                    const option = new Option(formatter(item), item.id);
+                    option.selected = String(item.id) === String(selectedValue);
+                    select.append(option);
+                });
+                select.disabled = false;
+            };
+
+            const resetSelect = (select, text) => {
+                select.innerHTML = '';
+                select.append(new Option(text, ''));
+                select.disabled = true;
+            };
+
+            const cargarCentros = async (zonaId, selectedValue = '') => {
+                if (!zonaId) {
+                    resetSelect(centroSelect, 'Seleccione una zona primero');
+                    return;
+                }
+
+                const response = await fetch(`/ajax/zonas/${zonaId}/centros`, { headers: { Accept: 'application/json' } });
+                const centros = await response.json();
+                setOptions(centroSelect, centros, selectedValue, 'No hay centros disponibles', (centro) => centro.centro);
+            };
+
+            const cargarProgramas = async (escuelaId, selectedValue = '') => {
+                if (!escuelaId) {
+                    resetSelect(programaSelect, 'Seleccione una escuela primero');
+                    return;
+                }
+
+                const response = await fetch(`/ajax/escuelas/${escuelaId}/programas`, { headers: { Accept: 'application/json' } });
+                const programas = await response.json();
+                setOptions(programaSelect, programas, selectedValue, 'No hay programas disponibles', (programa) => `${programa.codigo_pro} - ${programa.nombre}`);
+            };
+
+            zonaSelect.addEventListener('change', () => cargarCentros(zonaSelect.value));
+            escuelaSelect.addEventListener('change', () => cargarProgramas(escuelaSelect.value));
+
+            if (!zonaSelect.value) {
+                resetSelect(centroSelect, 'Seleccione una zona primero');
+            } else if (centroSelect.options.length <= 1) {
+                cargarCentros(zonaSelect.value, centroSelect.dataset.selected);
+            }
+
+            if (!escuelaSelect.value) {
+                resetSelect(programaSelect, 'Seleccione una escuela primero');
+            } else if (programaSelect.options.length <= 1) {
+                cargarProgramas(escuelaSelect.value, programaSelect.dataset.selected);
+            }
+        });
+    </script>
+@endpush

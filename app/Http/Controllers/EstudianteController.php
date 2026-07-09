@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreEstudianteRequest;
 use App\Http\Requests\UpdateEstudianteRequest;
 use App\Models\Centro;
+use App\Models\Escuela;
 use App\Models\Estudiante;
 use App\Models\Programa;
+use App\Models\Zona;
 use App\Services\EstudianteService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -37,8 +39,12 @@ class EstudianteController extends Controller
     {
         return view('estudiantes.create', [
             'estudiante' => new Estudiante(),
-            'centros' => Centro::where('estado_registro', 'Activo')->orderBy('centro')->get(),
-            'programas' => Programa::where('estado_registro', 'Activo')->orderBy('nombre')->get(),
+            'zonas' => Zona::where('estado_registro', 'Activo')->orderBy('nombre')->get(),
+            'escuelas' => Escuela::where('estado_registro', 'Activo')->orderBy('nombre')->get(),
+            'centros' => collect(),
+            'programas' => collect(),
+            'zonaSeleccionada' => null,
+            'escuelaSeleccionada' => null,
             'estadosAcademicos' => $this->estadosAcademicosFormulario(),
         ]);
     }
@@ -59,10 +65,29 @@ class EstudianteController extends Controller
 
     public function edit(Estudiante $estudiante): View
     {
+        $zonaSeleccionada = $estudiante->centro?->zona_id;
+        $escuelaSeleccionada = $estudiante->programa?->escuela_id;
+
         return view('estudiantes.edit', [
             'estudiante' => $estudiante,
-            'centros' => Centro::where('estado_registro', 'Activo')->orWhere('id', $estudiante->centro_id)->orderBy('centro')->get(),
-            'programas' => Programa::where('estado_registro', 'Activo')->orWhere('id', $estudiante->programa_id)->orderBy('nombre')->get(),
+            'zonas' => Zona::where('estado_registro', 'Activo')->orWhere('id', $zonaSeleccionada)->orderBy('nombre')->get(),
+            'escuelas' => Escuela::where('estado_registro', 'Activo')->orWhere('id', $escuelaSeleccionada)->orderBy('nombre')->get(),
+            'centros' => Centro::where('zona_id', $zonaSeleccionada)
+                ->where(function ($query) use ($estudiante): void {
+                    $query->where('estado_registro', 'Activo')
+                        ->orWhere('id', $estudiante->centro_id);
+                })
+                ->orderBy('centro')
+                ->get(),
+            'programas' => Programa::where('escuela_id', $escuelaSeleccionada)
+                ->where(function ($query) use ($estudiante): void {
+                    $query->where('estado_registro', 'Activo')
+                        ->orWhere('id', $estudiante->programa_id);
+                })
+                ->orderBy('nombre')
+                ->get(),
+            'zonaSeleccionada' => $zonaSeleccionada,
+            'escuelaSeleccionada' => $escuelaSeleccionada,
             'estadosAcademicos' => $this->estadosAcademicosFormulario(),
         ]);
     }

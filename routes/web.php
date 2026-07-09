@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\CentroController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DenunciaController;
@@ -23,6 +24,8 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::middleware('autenticado')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/ajax/zonas/{zona}/centros', [AjaxController::class, 'centrosPorZona'])->name('ajax.zonas.centros');
+    Route::get('/ajax/escuelas/{escuela}/programas', [AjaxController::class, 'programasPorEscuela'])->name('ajax.escuelas.programas');
     Route::resource('escuelas', EscuelaController::class)->except('destroy');
     Route::delete('escuelas/{escuela}', [EscuelaController::class, 'destroy'])
         ->middleware('rol:Administrador')
