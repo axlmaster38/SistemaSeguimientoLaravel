@@ -36,6 +36,31 @@ Reglas:
 - Solo el rol `Administrador` puede cambiar `estado_registro`.
 - El rol `Operador` puede crear, consultar y editar, pero no cambiar `estado_registro`.
 
+## Gestion academica
+
+En Sprint 6 se extiende el mismo patron a:
+
+- `programas`
+- `zonas`
+- `centros`
+
+Reglas adicionales:
+
+- No se eliminan fisicamente programas, zonas ni centros.
+- La accion de eliminar se reemplaza por cambio de `estado_registro`.
+- Por defecto los listados muestran registros `Activo`.
+- Los listados permiten filtrar por `Activo`, `Inactivo` o `Todos`.
+- Solo `Administrador` puede cambiar `estado_registro`.
+- `Operador` puede crear, consultar y editar, pero no cambiar `estado_registro`.
+- No se puede inactivar un programa si tiene estudiantes activos.
+- No se puede inactivar un centro si tiene estudiantes activos.
+- No se puede inactivar una zona si tiene centros activos.
+
+Definicion operativa:
+
+- Estudiante activo: `estudiantes.estado_academico = Activo`.
+- Centro activo: `centros.estado_registro = Activo`.
+
 ## Compatibilidad
 
 Las decisiones de implementacion deben mantenerse compatibles con:

@@ -8,9 +8,15 @@
         <a class="nav-link rounded {{ request()->routeIs('escuelas.*') ? 'active' : '' }}" href="{{ route('escuelas.index') }}">
             <i class="fa-solid fa-school me-2"></i>Escuelas
         </a>
-        <a class="nav-link rounded" href="#"><i class="fa-solid fa-graduation-cap me-2"></i>Programas</a>
-        <a class="nav-link rounded" href="#"><i class="fa-solid fa-map-location-dot me-2"></i>Zonas</a>
-        <a class="nav-link rounded" href="#"><i class="fa-solid fa-building-columns me-2"></i>Centros</a>
+        <a class="nav-link rounded {{ request()->routeIs('programas.*') ? 'active' : '' }}" href="{{ route('programas.index') }}">
+            <i class="fa-solid fa-graduation-cap me-2"></i>Programas
+        </a>
+        <a class="nav-link rounded {{ request()->routeIs('zonas.*') ? 'active' : '' }}" href="{{ route('zonas.index') }}">
+            <i class="fa-solid fa-map-location-dot me-2"></i>Zonas
+        </a>
+        <a class="nav-link rounded {{ request()->routeIs('centros.*') ? 'active' : '' }}" href="{{ route('centros.index') }}">
+            <i class="fa-solid fa-building-columns me-2"></i>Centros
+        </a>
         <a class="nav-link rounded" href="#"><i class="fa-solid fa-user-graduate me-2"></i>Estudiantes</a>
 
         <div class="nav-title small text-uppercase mt-3 mb-1">Procesos Disciplinarios</div>

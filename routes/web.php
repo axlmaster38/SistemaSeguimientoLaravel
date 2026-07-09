@@ -1,8 +1,11 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\CentroController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EscuelaController;
+use App\Http\Controllers\ProgramaController;
+use App\Http\Controllers\ZonaController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -21,4 +24,16 @@ Route::middleware('autenticado')->group(function () {
     Route::delete('escuelas/{escuela}', [EscuelaController::class, 'destroy'])
         ->middleware('rol:Administrador')
         ->name('escuelas.destroy');
+    Route::resource('programas', ProgramaController::class)->except('destroy');
+    Route::delete('programas/{programa}', [ProgramaController::class, 'destroy'])
+        ->middleware('rol:Administrador')
+        ->name('programas.destroy');
+    Route::resource('zonas', ZonaController::class)->except('destroy');
+    Route::delete('zonas/{zona}', [ZonaController::class, 'destroy'])
+        ->middleware('rol:Administrador')
+        ->name('zonas.destroy');
+    Route::resource('centros', CentroController::class)->except('destroy');
+    Route::delete('centros/{centro}', [CentroController::class, 'destroy'])
+        ->middleware('rol:Administrador')
+        ->name('centros.destroy');
 });

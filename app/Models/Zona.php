@@ -13,10 +13,16 @@ class Zona extends Model
 
     protected $fillable = [
         'nombre',
+        'estado_registro',
     ];
 
     public function centros(): HasMany
     {
         return $this->hasMany(Centro::class);
+    }
+
+    public function centrosActivos(): HasMany
+    {
+        return $this->hasMany(Centro::class)->where('estado_registro', 'Activo');
     }
 }

@@ -16,6 +16,7 @@ class Programa extends Model
     protected $fillable = [
         'codigo_pro',
         'nombre',
+        'estado_registro',
         'escuela_id',
         'usuario_registra_id',
         'usuario_actualiza_id',
@@ -41,6 +42,11 @@ class Programa extends Model
     public function estudiantes(): HasMany
     {
         return $this->hasMany(Estudiante::class);
+    }
+
+    public function estudiantesActivos(): HasMany
+    {
+        return $this->hasMany(Estudiante::class)->where('estado_academico', 'Activo');
     }
 
     public function historicosEstudiantes(): HasMany

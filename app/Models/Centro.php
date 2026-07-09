@@ -14,6 +14,7 @@ class Centro extends Model
 
     protected $fillable = [
         'centro',
+        'estado_registro',
         'zona_id',
     ];
 
@@ -25,5 +26,10 @@ class Centro extends Model
     public function estudiantes(): HasMany
     {
         return $this->hasMany(Estudiante::class);
+    }
+
+    public function estudiantesActivos(): HasMany
+    {
+        return $this->hasMany(Estudiante::class)->where('estado_academico', 'Activo');
     }
 }
