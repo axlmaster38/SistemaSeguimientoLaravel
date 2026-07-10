@@ -54,8 +54,15 @@
         <a class="nav-link rounded" href="#"><i class="fa-solid fa-book me-2"></i>Normatividades</a>
         <a class="nav-link rounded" href="#"><i class="fa-solid fa-section me-2"></i>Articulos</a>
 
+        <div class="nav-title small text-uppercase mt-3 mb-1">Reportes</div>
+        <a class="nav-link rounded {{ request()->routeIs('reportes.antecedentes-estudiante') ? 'active' : '' }}" href="{{ route('reportes.antecedentes-estudiante') }}">
+            <i class="fa-solid fa-user-clock me-2"></i>Antecedentes por estudiante
+        </a>
+        <a class="nav-link rounded {{ request()->routeIs('reportes.procesos-historicos*') ? 'active' : '' }}" href="{{ route('reportes.procesos-historicos') }}">
+            <i class="fa-solid fa-clock-rotate-left me-2"></i>Procesos historicos
+        </a>
+
         <div class="nav-title small text-uppercase mt-3 mb-1">General</div>
-        <a class="nav-link rounded" href="#"><i class="fa-solid fa-chart-column me-2"></i>Reportes</a>
         <a class="nav-link rounded" href="#"><i class="fa-solid fa-gear me-2"></i>Configuracion</a>
     </nav>
 </aside>

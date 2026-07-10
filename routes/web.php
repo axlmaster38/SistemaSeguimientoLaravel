@@ -15,6 +15,7 @@ use App\Http\Controllers\PeriodoAcademicoController;
 use App\Http\Controllers\ProcesoDisciplinarioController;
 use App\Http\Controllers\ProgramaController;
 use App\Http\Controllers\PruebaController;
+use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\SancionController;
 use App\Http\Controllers\ZonaController;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +36,11 @@ Route::middleware('autenticado')->group(function () {
     Route::get('/ajax/escuelas/{escuela}/programas', [AjaxController::class, 'programasPorEscuela'])->name('ajax.escuelas.programas');
     Route::get('/ajax/procesos/{proceso}/descargos', [AjaxController::class, 'descargosPorProceso'])->name('ajax.procesos.descargos');
     Route::get('/ajax/procesos/{proceso}/sanciones', [AjaxController::class, 'sancionesPorProceso'])->name('ajax.procesos.sanciones');
+    Route::get('reportes', [ReporteController::class, 'index'])->name('reportes.index');
+    Route::get('reportes/antecedentes-estudiante', [ReporteController::class, 'antecedentesEstudiante'])->name('reportes.antecedentes-estudiante');
+    Route::get('reportes/procesos-historicos', [ReporteController::class, 'procesosHistoricos'])->name('reportes.procesos-historicos');
+    Route::get('reportes/procesos-historicos/exportar-csv', [ReporteController::class, 'exportarProcesosHistoricosCsv'])->name('reportes.procesos-historicos.exportar-csv');
+    Route::get('reportes/procesos-historicos/{proceso}', [ReporteController::class, 'procesoHistoricoDetalle'])->name('reportes.procesos-historicos.show');
     Route::resource('escuelas', EscuelaController::class)->except('destroy');
     Route::delete('escuelas/{escuela}', [EscuelaController::class, 'destroy'])
         ->middleware('rol:Administrador')

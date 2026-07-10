@@ -298,3 +298,34 @@ Reglas revisadas sin implementacion nueva:
 
 - En Django no se encontro un dashboard con consultas de procesos abiertos, cerrados, vencidos, proximos a vencer o estudiantes con antecedentes; la vista `sistema` solo renderiza el menu.
 - En Django no se encontro una regla explicita llamada `dias_vencidos`; el listado usa `dias_restantes` y sus colores.
+
+## Reportes, antecedentes e historicos
+
+En Sprint 14 se agregan reportes de solo consulta:
+
+- Antecedentes por estudiante.
+- Procesos historicos.
+- Detalle historico de proceso.
+
+Arquitectura:
+
+- Las consultas, filtros y eager loading viven en `ReporteService`.
+- `ReporteController` solo coordina request, service y vista.
+- Las vistas Blade no calculan reglas de negocio; solo presentan datos y valores ya resueltos.
+- Todas las rutas quedan dentro del middleware `autenticado`.
+- Administrador y Operador pueden consultar reportes.
+
+Rutas:
+
+- `GET /reportes`
+- `GET /reportes/antecedentes-estudiante`
+- `GET /reportes/procesos-historicos`
+- `GET /reportes/procesos-historicos/{proceso}`
+- `GET /reportes/procesos-historicos/exportar-csv`
+
+Exportacion:
+
+- Django tenia XLSX con `openpyxl` y PDF con `xhtml2pdf`.
+- Laravel actual no tiene dependencia instalada para XLSX/PDF.
+- Para mantener compatibilidad sin agregar paquetes, se implementa CSV nativo para procesos historicos.
+- XLSX/PDF queda como mejora futura condicionada a aprobar una dependencia Composer compatible con PHP 8.4.16.

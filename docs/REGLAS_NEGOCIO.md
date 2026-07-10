@@ -142,3 +142,66 @@ Resultado de revision:
 - No queda una regla Django pendiente de implementar dentro del alcance revisado.
 - No se implementaron conteos nuevos de dashboard porque no existen como regla en Django.
 - No se creo un calculo independiente de `dias_vencidos` porque Django no lo define; solo calcula `dias_restantes`.
+
+## REPORTES E HISTORICOS MIGRADOS
+
+Origen Django:
+
+- `sistemaSeguimiento/views.py::listar_procesos_historicos`
+- `sistemaSeguimiento/views.py::filtrar_procesos_historicos`
+- `sistemaSeguimiento/views.py::verProceso_historico`
+- `sistemaSeguimiento/views.py::exportar_procesos_historicos`
+- `sistemaSeguimiento/views.py::descargar_proceso_pdf`
+- `sistemaSeguimiento/views.py::exportar_sanciones_excel`
+- `sistemaSeguimiento/forms.py::proceso_historicoFiltroForm`
+- `sistemaSeguimiento/templates/listar_procesos_historicos.html`
+- `sistemaSeguimiento/templates/partials/tabla_procesos_historicos.html`
+- `sistemaSeguimiento/templates/ver_proceso_historico.html`
+- `sistemaSeguimiento/templates/ver_proceso_historico_pdf.html`
+
+Implementacion Laravel:
+
+- `app/Http/Controllers/ReporteController.php`
+- `app/Services/ReporteService.php`
+- `resources/views/reportes/index.blade.php`
+- `resources/views/reportes/antecedentes_estudiante.blade.php`
+- `resources/views/reportes/procesos_historicos.blade.php`
+- `resources/views/reportes/proceso_historico_detalle.blade.php`
+
+Reportes migrados:
+
+- Antecedentes por estudiante: consolidado por estudiante con datos actuales, denuncias, procesos, decisiones, sanciones, notificaciones, apelaciones e historico de programas.
+- Procesos historicos: listado con estudiante, denuncia, proceso, estado, fechas, programa historico, programa actual, centro, decisiones, sanciones, notificaciones, apelaciones y semaforizacion.
+- Detalle historico de proceso: vista de consulta de relaciones del proceso, equivalente funcional al detalle historico de Django.
+
+Filtros replicados desde Django para procesos historicos:
+
+- estudiante
+- proceso
+- denuncia
+- estado del proceso
+- clasificacion de falta
+- fecha desde
+- fecha hasta
+- con sancion
+- con decision
+- con notificacion de proceso
+- con notificacion de sancion
+- sin sancion
+- sin decision
+- sin notificacion de proceso
+- sin notificacion de sancion
+
+Filtros adicionales usados en el reporte consolidado de antecedentes:
+
+- codigo del estudiante
+- programa actual
+- centro actual
+- estado de sancion
+
+Exportaciones:
+
+- Django tenia exportacion XLSX de procesos historicos y sanciones con `openpyxl`.
+- Django tenia PDF de detalle historico con `xhtml2pdf`.
+- Laravel implementa exportacion CSV nativa de procesos historicos usando los mismos campos principales del XLSX Django.
+- No se agrego dependencia Composer para XLSX/PDF en este sprint.
