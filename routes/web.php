@@ -6,12 +6,14 @@ use App\Http\Controllers\CentroController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DenunciaController;
 use App\Http\Controllers\DescargoController;
+use App\Http\Controllers\DecisionController;
 use App\Http\Controllers\EscuelaController;
 use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\PeriodoAcademicoController;
 use App\Http\Controllers\ProcesoDisciplinarioController;
 use App\Http\Controllers\ProgramaController;
 use App\Http\Controllers\PruebaController;
+use App\Http\Controllers\SancionController;
 use App\Http\Controllers\ZonaController;
 use Illuminate\Support\Facades\Route;
 
@@ -74,4 +76,18 @@ Route::middleware('autenticado')->group(function () {
     Route::delete('pruebas/{prueba}', [PruebaController::class, 'destroy'])
         ->middleware('rol:Administrador')
         ->name('pruebas.destroy');
+    Route::resource('decisiones', DecisionController::class)
+        ->parameters(['decisiones' => 'decision'])
+        ->except('destroy');
+    Route::get('decisiones/{decision}/archivo', [DecisionController::class, 'descargarArchivo'])
+        ->name('decisiones.archivo');
+    Route::delete('decisiones/{decision}', [DecisionController::class, 'destroy'])
+        ->middleware('rol:Administrador')
+        ->name('decisiones.destroy');
+    Route::resource('sanciones', SancionController::class)
+        ->parameters(['sanciones' => 'sancion'])
+        ->except('destroy');
+    Route::delete('sanciones/{sancion}', [SancionController::class, 'destroy'])
+        ->middleware('rol:Administrador')
+        ->name('sanciones.destroy');
 });

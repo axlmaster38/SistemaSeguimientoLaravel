@@ -37,8 +37,12 @@
         <a class="nav-link rounded {{ request()->routeIs('pruebas.*') ? 'active' : '' }}" href="{{ route('pruebas.index') }}">
             <i class="fa-solid fa-paperclip me-2"></i>Pruebas
         </a>
-        <a class="nav-link rounded" href="#"><i class="fa-solid fa-check-to-slot me-2"></i>Decisiones</a>
-        <a class="nav-link rounded" href="#"><i class="fa-solid fa-triangle-exclamation me-2"></i>Sanciones</a>
+        <a class="nav-link rounded {{ request()->routeIs('decisiones.*') ? 'active' : '' }}" href="{{ route('decisiones.index') }}">
+            <i class="fa-solid fa-check-to-slot me-2"></i>Decisiones
+        </a>
+        <a class="nav-link rounded {{ request()->routeIs('sanciones.*') ? 'active' : '' }}" href="{{ route('sanciones.index') }}">
+            <i class="fa-solid fa-triangle-exclamation me-2"></i>Sanciones
+        </a>
         <a class="nav-link rounded" href="#"><i class="fa-solid fa-envelope-open-text me-2"></i>Notificaciones</a>
         <a class="nav-link rounded" href="#"><i class="fa-solid fa-scale-unbalanced-flip me-2"></i>Apelaciones</a>
 

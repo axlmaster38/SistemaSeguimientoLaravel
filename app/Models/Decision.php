@@ -21,6 +21,7 @@ class Decision extends Model
         'clasificacion_falta',
         'observaciones',
         'archivo',
+        'estado_registro',
         'proceso_disciplinario_id',
         'usuario_registra_id',
         'usuario_actualiza_id',

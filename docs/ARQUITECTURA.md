@@ -160,6 +160,48 @@ Archivos de pruebas:
 - No se eliminan archivos al inactivar una prueba.
 - La descarga se realiza mediante ruta protegida por autenticacion.
 
+## Decisiones y sanciones
+
+En Sprint 11 se extiende `estado_registro` a:
+
+- `decisiones`
+- `sanciones`
+
+Reglas:
+
+- No se eliminan fisicamente decisiones ni sanciones.
+- La accion de eliminar se reemplaza por cambio de `estado_registro`.
+- `tipo_decision`, `clasificacion_falta`, `tipo_sancion` y `estado_sancion` son campos funcionales del negocio.
+- `estado_registro` es el estado tecnico para activar o inactivar el registro.
+- Solo se pueden crear decisiones para procesos activos.
+- No se puede inactivar una decision si tiene sanciones activas asociadas.
+- Solo se pueden crear sanciones para decisiones activas.
+- No se puede inactivar una sancion si tiene notificaciones asociadas o activas.
+- La relacion funcional queda: Proceso disciplinario -> Decision -> Sancion.
+
+Choices replicados desde Django:
+
+- `tipo_decision`: Apertura de proceso disciplinario, Primera Instancia, Segunda Instancia.
+- `clasificacion_falta`: Leve, Grave, Gravisima.
+- `tipo_sancion`: Primera Instancia, Segunda Instancia.
+- `estado_sancion`: En proceso, Finalizada.
+
+Archivos de decisiones:
+
+- Los archivos se almacenan en el disco `public`, carpeta `decisiones`.
+- En base de datos se guarda solo la ruta relativa.
+- Formatos permitidos: `pdf`, `doc`, `docx`, `jpg`, `jpeg`, `png`.
+- Tamano maximo: 10 MB.
+- Al actualizar una decision, si no se carga archivo nuevo se conserva el anterior.
+- Si se reemplaza el archivo, se elimina el archivo anterior del storage.
+- No se eliminan archivos al inactivar una decision.
+- La descarga se realiza mediante ruta protegida por autenticacion.
+
+Logica replicada desde Django:
+
+- Al crear o editar una sancion de `Primera Instancia`, el proceso pasa a `Fallo en primera instancia`.
+- Al crear o editar una sancion de `Segunda Instancia`, el proceso pasa a `Fallo en segunda instancia`.
+
 ## Compatibilidad
 
 Las decisiones de implementacion deben mantenerse compatibles con:

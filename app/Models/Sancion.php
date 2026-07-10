@@ -20,6 +20,7 @@ class Sancion extends Model
         'periodo_inicial_sancion_id',
         'periodo_final_sancion_id',
         'estado_sancion',
+        'estado_registro',
         'decision_id',
         'usuario_registra_id',
         'usuario_actualiza_id',
