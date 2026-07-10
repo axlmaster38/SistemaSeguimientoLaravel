@@ -1,0 +1,144 @@
+# Reglas de negocio migradas desde Django
+
+Proyecto origen:
+
+`D:\laragon\www\SistemaSeguimientoLaravel\referencia_django\ProyectoDjangoSME`
+
+Proyecto destino:
+
+`D:\laragon\www\SistemaSeguimientoLaravel`
+
+## Procesos disciplinarios
+
+Origen Django:
+
+- `sistemaSeguimiento/forms.py::ESTADO_PROCESO_CHOICES`
+- `sistemaSeguimiento/views.py::sumar_dias_habiles`
+- `sistemaSeguimiento/views.py::contar_dias_habiles`
+- `sistemaSeguimiento/views.py::listar_procesos_disciplinarios`
+- `sistemaSeguimiento/views.py::filtrar_procesos_disciplinarios`
+- `sistemaSeguimiento/templates/partials/tabla_procesos_disciplinarios.html`
+
+Implementacion Laravel:
+
+- `app/Services/ReglasNegocioDisciplinarioService.php`
+- `app/Services/ProcesoDisciplinarioService.php`
+- `resources/views/procesos/index.blade.php`
+
+Reglas:
+
+- Los dias habiles son lunes a viernes.
+- La fecha limite se obtiene sumando 10 dias habiles a la fecha base.
+- La fecha base es `fecha_2da_notificacion` de la ultima notificacion del proceso si existe.
+- Si no existe `fecha_2da_notificacion`, la fecha base es `fecha_registro` de la ultima notificacion del proceso.
+- Los dias restantes se calculan como dias habiles desde hoy hasta la fecha limite.
+- Los dias transcurridos se calculan desde la ultima sancion; si no existe sancion, desde la ultima decision; si no existe decision, desde `fecha_registro` del proceso.
+- Si el proceso no tiene notificacion, se muestra `Proceso sin notificar`.
+
+Semaforizacion:
+
+- Rojo: `dias_restantes <= 2`, color `rgb(250, 124, 124)`.
+- Amarillo: `dias_restantes <= 5`, color `rgb(250, 239, 124)`.
+- Sin color: `dias_restantes > 5`.
+
+Colores de estado:
+
+- Estados exactos de Django: `Proceso Abierto`, `Fallo en primera instancia`, `Fallo en segunda instancia`, `Cumpliendo Sanción`, `Proceso Cerrado`, `Sanción cumplida`.
+- `Proceso Abierto`: `rgb(0, 242, 255)`.
+- `Fallo en primera instancia`: `rgb(0, 153, 255)`.
+- `Fallo en segunda instancia`: `rgb(0, 153, 255)`.
+- `Cumpliendo Sanción`: `rgb(0, 153, 255)`.
+- `Proceso Cerrado`: `rgb(17, 0, 255)`.
+- `Sanción cumplida`: `rgb(17, 0, 255)`.
+
+## Sanciones
+
+Origen Django:
+
+- `sistemaSeguimiento/views.py::listar_sanciones`
+- `sistemaSeguimiento/views.py::filtrar_sanciones`
+- `sistemaSeguimiento/templates/partials/tabla_sanciones.html`
+
+Implementacion Laravel:
+
+- `app/Services/ReglasNegocioDisciplinarioService.php`
+- `app/Services/SancionService.php`
+- `resources/views/sanciones/index.blade.php`
+
+Reglas:
+
+- Los meses restantes se calculan desde hoy hasta `periodo_final_sancion.fecha_inicio`.
+- Si quedan dias adicionales, el calculo redondea al siguiente mes.
+- Si los meses restantes son negativos o no existen, se muestra `Sancion finalizada`.
+- La notificacion de sancion se obtiene desde la ultima notificacion asociada a la sancion.
+
+Semaforizacion:
+
+- Rojo: meses restantes entre `0` y `1`, color `rgb(250, 124, 124)`.
+- Amarillo: meses restantes entre `2` y `4`, color `rgb(250, 239, 124)`.
+- Sin color: meses restantes mayores o iguales a `5`.
+
+## Estados automaticos
+
+Origen Django:
+
+- `sistemaSeguimiento/views.py::registrarSancion`
+
+Implementacion Laravel:
+
+- `app/Services/SancionService.php`
+
+Reglas:
+
+- Si una sancion es de `Primera Instancia`, el proceso relacionado cambia a `Fallo en primera instancia`.
+- Si una sancion es de `Segunda Instancia`, el proceso relacionado cambia a `Fallo en segunda instancia`.
+
+## Antecedentes
+
+Origen Django:
+
+- `sistemaSeguimiento/views.py::registrarDenuncia`
+- `sistemaSeguimiento/views.py::ajax_guardar_denuncia`
+
+Implementacion Laravel:
+
+- `app/Services/DenunciaService.php`
+
+Regla:
+
+- Al crear o editar una denuncia, se cuenta el total de denuncias del estudiante y se guarda en sesion como `denuncias_estudiante_count`.
+
+## Historico
+
+Origen Django:
+
+- `sistemaSeguimiento/views.py::listar_procesos_historicos`
+- `sistemaSeguimiento/views.py::filtrar_procesos_historicos`
+- `sistemaSeguimiento/views.py::verProceso_historico`
+
+Implementacion Laravel existente:
+
+- `app/Services/ProcesoDisciplinarioService.php`
+- `app/Models/HistoricoEstudiante.php`
+
+Reglas identificadas:
+
+- Django consulta procesos historicos con relaciones de denuncia, estudiante, decisiones, sanciones, notificaciones, descargos, pruebas, articulos y apelaciones.
+- Laravel ya crea o actualiza `historico_estudiantes` al crear o editar un proceso disciplinario, guardando estudiante, proceso y programa actual del estudiante.
+
+## Dashboard
+
+Origen Django:
+
+- `sistemaSeguimiento/views.py::sistema`
+
+Resultado de revision:
+
+- No se encontro en Django un dashboard con consultas de procesos abiertos, cerrados, vencidos, proximos a vencer o estudiantes con antecedentes.
+- La vista `sistema` solo renderiza el menu principal.
+
+## Reglas pendientes
+
+- No queda una regla Django pendiente de implementar dentro del alcance revisado.
+- No se implementaron conteos nuevos de dashboard porque no existen como regla en Django.
+- No se creo un calculo independiente de `dias_vencidos` porque Django no lo define; solo calcula `dias_restantes`.

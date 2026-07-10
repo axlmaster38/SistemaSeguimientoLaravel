@@ -251,3 +251,50 @@ Las decisiones de implementacion deben mantenerse compatibles con:
 - Apache 2.4.67
 - PHP 8.4.16
 - MariaDB 11.8.6
+
+## REGLAS DE NEGOCIO MIGRADAS
+
+Origen Django:
+
+- `sistemaSeguimiento/views.py::sumar_dias_habiles`
+- `sistemaSeguimiento/forms.py::ESTADO_PROCESO_CHOICES`
+- `sistemaSeguimiento/views.py::contar_dias_habiles`
+- `sistemaSeguimiento/views.py::listar_procesos_disciplinarios`
+- `sistemaSeguimiento/views.py::filtrar_procesos_disciplinarios`
+- `sistemaSeguimiento/views.py::listar_sanciones`
+- `sistemaSeguimiento/views.py::filtrar_sanciones`
+- `sistemaSeguimiento/views.py::registrarSancion`
+- `sistemaSeguimiento/views.py::registrarDenuncia`
+- `sistemaSeguimiento/views.py::ajax_guardar_denuncia`
+- `sistemaSeguimiento/templates/partials/tabla_procesos_disciplinarios.html`
+- `sistemaSeguimiento/templates/partials/tabla_sanciones.html`
+
+Implementacion Laravel:
+
+- `app/Services/ReglasNegocioDisciplinarioService.php`
+- `app/Services/ProcesoDisciplinarioService.php`
+- `app/Services/SancionService.php`
+- `app/Services/DenunciaService.php`
+- `resources/views/procesos/index.blade.php`
+- `resources/views/sanciones/index.blade.php`
+
+Reglas migradas:
+
+- Los dias habiles se calculan de lunes a viernes.
+- La fecha limite del proceso es 10 dias habiles despues de la fecha base de notificacion.
+- La fecha base del proceso es `fecha_2da_notificacion` si existe; si no, `fecha_registro` de la ultima notificacion de proceso.
+- Los dias restantes del proceso se cuentan como dias habiles desde hoy hasta la fecha limite.
+- Los dias transcurridos del proceso se calculan desde la ultima sancion; si no existe, desde la ultima decision; si no existe, desde `fecha_registro` del proceso.
+- Semaforo de procesos: rojo cuando `dias_restantes <= 2`, amarillo cuando `dias_restantes <= 5`.
+- Color de `estado_proceso`: `Proceso Abierto` usa `rgb(0, 242, 255)`; `Fallo en primera instancia`, `Fallo en segunda instancia` y `Cumpliendo Sanción` usan `rgb(0, 153, 255)`; `Proceso Cerrado` y `Sanción cumplida` usan `rgb(17, 0, 255)`.
+- El catalogo de estados de proceso se homologa al Django original: `Proceso Abierto`, `Fallo en primera instancia`, `Fallo en segunda instancia`, `Cumpliendo Sanción`, `Proceso Cerrado`, `Sanción cumplida`.
+- Meses restantes de sancion: diferencia entre hoy y `periodo_final_sancion.fecha_inicio`, redondeando hacia arriba si quedan dias adicionales.
+- Semaforo de sanciones: rojo para meses `0..1`, amarillo para meses `2..4`.
+- Al crear o editar sancion de `Primera Instancia`, el proceso pasa a `Fallo en primera instancia`.
+- Al crear o editar sancion de `Segunda Instancia`, el proceso pasa a `Fallo en segunda instancia`.
+- Al crear o editar denuncia, se guarda en sesion `denuncias_estudiante_count` con el total de denuncias del estudiante.
+
+Reglas revisadas sin implementacion nueva:
+
+- En Django no se encontro un dashboard con consultas de procesos abiertos, cerrados, vencidos, proximos a vencer o estudiantes con antecedentes; la vista `sistema` solo renderiza el menu.
+- En Django no se encontro una regla explicita llamada `dias_vencidos`; el listado usa `dias_restantes` y sus colores.

@@ -21,14 +21,22 @@
             <div class="col-12 d-flex gap-2"><button type="submit" class="btn btn-outline-primary">Buscar</button><a href="{{ route('sanciones.index') }}" class="btn btn-outline-secondary">Limpiar</a></div>
         </form>
         <div class="table-responsive"><table class="table align-middle">
-            <thead><tr><th>ID</th><th>Decision</th><th>Proceso</th><th>Estudiante</th><th>Tipo</th><th>Periodos</th><th>Inicial</th><th>Final</th><th>Estado sancion</th><th>Estado</th><th class="text-end">Acciones</th></tr></thead>
-            <tbody>@forelse ($sanciones as $sancion)<tr>
+            <thead><tr><th>ID</th><th>Decision</th><th>Proceso</th><th>Estudiante</th><th>Tipo</th><th>Periodos</th><th>Inicial</th><th>Final</th><th>Notificacion</th><th>Meses faltantes</th><th>Estado sancion</th><th>Estado</th><th class="text-end">Acciones</th></tr></thead>
+            <tbody>@forelse ($sanciones as $sancion)
+                @php
+                    $reglas = $sancion->reglas_negocio ?? [];
+                    $colorMeses = $reglas['color_meses_restantes'] ?? null;
+                    $mesesRestantes = $reglas['meses_restantes'] ?? null;
+                @endphp
+                <tr>
                 <td class="fw-semibold">{{ $sancion->id }}</td><td>#{{ $sancion->decision_id }} - {{ $sancion->decision?->nombre }}</td><td>#{{ $sancion->decision?->proceso_disciplinario_id }}</td>
                 <td>{{ $sancion->decision?->procesoDisciplinario?->denuncia?->estudiante?->codigo_estu }} - {{ $sancion->decision?->procesoDisciplinario?->denuncia?->estudiante?->nombre }}</td>
-                <td>{{ $sancion->tipo_sancion }}</td><td>{{ $sancion->numero_periodos }}</td><td>{{ $sancion->periodoInicialSancion?->anio }} {{ $sancion->periodoInicialSancion?->periodo }}</td><td>{{ $sancion->periodoFinalSancion?->anio }} {{ $sancion->periodoFinalSancion?->periodo }}</td><td>{{ $sancion->estado_sancion }}</td>
+                <td>{{ $sancion->tipo_sancion }}</td><td>{{ $sancion->numero_periodos }}</td><td>{{ $sancion->periodoInicialSancion?->anio }} {{ $sancion->periodoInicialSancion?->periodo }}</td><td>{{ $sancion->periodoFinalSancion?->anio }} {{ $sancion->periodoFinalSancion?->periodo }}</td>
+                <td>{{ $reglas['texto_notificacion'] ?? 'Sin notificar' }} @if ($reglas['fecha_notificacion'] ?? null) el {{ $reglas['fecha_notificacion']->format('Y-m-d') }} @endif</td>
+                <td style="{{ $colorMeses ? 'background-color: '.$colorMeses.';' : '' }}">{{ $mesesRestantes !== null && $mesesRestantes >= 0 ? $mesesRestantes : 'Sancion finalizada' }}</td><td>{{ $sancion->estado_sancion }}</td>
                 <td><span class="badge text-bg-{{ $sancion->estado_registro === 'Activo' ? 'success' : 'secondary' }}">{{ $sancion->estado_registro }}</span></td>
                 <td><div class="d-flex justify-content-end gap-2"><a href="{{ route('sanciones.show', $sancion) }}" class="btn btn-sm btn-outline-secondary">Ver</a><a href="{{ route('sanciones.edit', $sancion) }}" class="btn btn-sm btn-outline-primary">Editar</a>@if (session('rol_usuario') === 'Administrador')<form method="POST" action="{{ route('sanciones.destroy', $sancion) }}" class="status-form">@csrf @method('DELETE')<button class="btn btn-sm btn-outline-{{ $sancion->estado_registro === 'Activo' ? 'danger' : 'success' }}">{{ $sancion->estado_registro === 'Activo' ? 'Inactivar' : 'Activar' }}</button></form>@endif</div></td>
-            </tr>@empty<tr><td colspan="11" class="text-center text-muted py-4">No hay sanciones registradas.</td></tr>@endforelse</tbody>
+            </tr>@empty<tr><td colspan="13" class="text-center text-muted py-4">No hay sanciones registradas.</td></tr>@endforelse</tbody>
         </table></div><div class="mt-3">{{ $sanciones->links() }}</div>
     </div></div>
 @endsection

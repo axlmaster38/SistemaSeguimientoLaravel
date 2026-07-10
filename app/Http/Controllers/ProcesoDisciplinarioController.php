@@ -15,7 +15,14 @@ use Illuminate\View\View;
 
 class ProcesoDisciplinarioController extends Controller
 {
-    private const ESTADOS_PROCESO = ['En estudio', 'Abierto', 'Cerrado', 'Archivado'];
+    private const ESTADOS_PROCESO = [
+        'Proceso Abierto',
+        'Fallo en primera instancia',
+        'Fallo en segunda instancia',
+        'Cumpliendo Sanción',
+        'Proceso Cerrado',
+        'Sanción cumplida',
+    ];
 
     public function __construct(private readonly ProcesoDisciplinarioService $procesoDisciplinarioService)
     {
@@ -47,7 +54,7 @@ class ProcesoDisciplinarioController extends Controller
     public function create(): View
     {
         return view('procesos.create', [
-            'proceso' => new ProcesoDisciplinario(['estado_proceso' => 'En estudio']),
+            'proceso' => new ProcesoDisciplinario(['estado_proceso' => 'Proceso Abierto']),
             'denuncias' => $this->denunciasActivasSinProcesoActivo(),
             'tipologiasFaltas' => TipologiaFalta::orderBy('nombre')->get(),
             'articulos' => Articulo::with('normatividad')->orderBy('no_articulo')->get(),

@@ -8,10 +8,14 @@ use Illuminate\Support\Facades\Schema;
 
 class SancionService
 {
+    public function __construct(private readonly ReglasNegocioDisciplinarioService $reglasNegocio)
+    {
+    }
+
     public function listar(string $buscar = '', string $estadoRegistro = 'Activo', string $tipoSancion = 'Todos', string $estadoSancion = 'Todos', ?int $periodoInicialId = null, ?int $periodoFinalId = null, ?int $decisionId = null): LengthAwarePaginator
     {
-        return Sancion::query()
-            ->with(['decision.procesoDisciplinario.denuncia.estudiante', 'periodoInicialSancion', 'periodoFinalSancion'])
+        $sanciones = Sancion::query()
+            ->with(['decision.procesoDisciplinario.denuncia.estudiante', 'periodoInicialSancion', 'periodoFinalSancion', 'notificaciones'])
             ->when($estadoRegistro !== 'Todos', fn ($q) => $q->where('estado_registro', $estadoRegistro))
             ->when($tipoSancion !== 'Todos', fn ($q) => $q->where('tipo_sancion', $tipoSancion))
             ->when($estadoSancion !== 'Todos', fn ($q) => $q->where('estado_sancion', $estadoSancion))
@@ -31,6 +35,14 @@ class SancionService
             ->orderByDesc('id')
             ->paginate(10)
             ->withQueryString();
+
+        $sanciones->getCollection()->transform(function (Sancion $sancion): Sancion {
+            $sancion->setAttribute('reglas_negocio', $this->reglasNegocio->calcularSancion($sancion));
+
+            return $sancion;
+        });
+
+        return $sanciones;
     }
 
     public function crear(array $datos): Sancion

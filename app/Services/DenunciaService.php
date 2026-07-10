@@ -54,7 +54,10 @@ class DenunciaService
         $datos['usuario_registra_evalua_id'] = session('usuario_id');
         $datos['usuario_actualiza_id'] = null;
 
-        return Denuncia::create($datos);
+        $denuncia = Denuncia::create($datos);
+        $this->guardarConteoDenunciasEstudianteEnSesion($denuncia);
+
+        return $denuncia;
     }
 
     public function actualizar(Denuncia $denuncia, array $datos): bool
@@ -63,7 +66,10 @@ class DenunciaService
         $datos['denuncia_antigua'] = (bool) ($datos['denuncia_antigua'] ?? false);
         $datos['usuario_actualiza_id'] = session('usuario_id');
 
-        return $denuncia->update($datos);
+        $actualizado = $denuncia->update($datos);
+        $this->guardarConteoDenunciasEstudianteEnSesion($denuncia->refresh());
+
+        return $actualizado;
     }
 
     public function alternarEstadoRegistro(Denuncia $denuncia): array
@@ -93,5 +99,12 @@ class DenunciaService
         return $denuncia->procesos()
             ->whereNotIn('estado_proceso', self::ESTADOS_INACTIVOS_PROCESO)
             ->exists();
+    }
+
+    private function guardarConteoDenunciasEstudianteEnSesion(Denuncia $denuncia): void
+    {
+        session([
+            'denuncias_estudiante_count' => Denuncia::where('estudiante_id', $denuncia->estudiante_id)->count(),
+        ]);
     }
 }

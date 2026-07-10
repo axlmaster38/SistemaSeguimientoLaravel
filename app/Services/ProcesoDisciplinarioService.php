@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\DB;
 
 class ProcesoDisciplinarioService
 {
+    public function __construct(private readonly ReglasNegocioDisciplinarioService $reglasNegocio)
+    {
+    }
+
     public function listar(
         string $buscar = '',
         string $estadoRegistro = 'Activo',
@@ -16,7 +20,7 @@ class ProcesoDisciplinarioService
         string $procesoAntiguo = 'Todos',
         ?int $denunciaId = null
     ): LengthAwarePaginator {
-        return ProcesoDisciplinario::query()
+        $procesos = ProcesoDisciplinario::query()
             ->with(['denuncia.estudiante'])
             ->when($estadoRegistro !== 'Todos', function ($query) use ($estadoRegistro): void {
                 $query->where('estado_registro', $estadoRegistro);
@@ -47,6 +51,14 @@ class ProcesoDisciplinarioService
             ->orderByDesc('id')
             ->paginate(10)
             ->withQueryString();
+
+        $procesos->getCollection()->transform(function (ProcesoDisciplinario $proceso): ProcesoDisciplinario {
+            $proceso->setAttribute('reglas_negocio', $this->reglasNegocio->calcularProceso($proceso));
+
+            return $proceso;
+        });
+
+        return $procesos;
     }
 
     public function crear(array $datos): ProcesoDisciplinario

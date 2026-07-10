@@ -53,16 +53,34 @@
             </form>
             <div class="table-responsive">
                 <table class="table align-middle">
-                    <thead><tr><th>ID</th><th>Estudiante</th><th>Codigo</th><th>Denuncia</th><th>Fecha apertura</th><th>Estado proceso</th><th>Antiguo</th><th>Estado</th><th class="text-end">Acciones</th></tr></thead>
+                    <thead><tr><th>ID</th><th>Estudiante</th><th>Codigo</th><th>Denuncia</th><th>Fecha apertura</th><th>Estado proceso</th><th>Dias transcurridos</th><th>Dias por vencer</th><th>Indicador</th><th>Antiguo</th><th>Estado</th><th class="text-end">Acciones</th></tr></thead>
                     <tbody>
                         @forelse ($procesos as $proceso)
+                            @php
+                                $reglas = $proceso->reglas_negocio ?? [];
+                                $colorEstado = $reglas['color_estado'] ?? null;
+                                $colorDias = $reglas['color_dias_restantes'] ?? null;
+                            @endphp
                             <tr>
                                 <td class="fw-semibold">{{ $proceso->id }}</td>
                                 <td>{{ $proceso->denuncia?->estudiante?->nombre }} {{ $proceso->denuncia?->estudiante?->apellido }}</td>
                                 <td>{{ $proceso->denuncia?->estudiante?->codigo_estu }}</td>
                                 <td>#{{ $proceso->denuncia_id }}</td>
                                 <td>{{ $proceso->fecha_apertura?->format('Y-m-d') ?? 'N/A' }}</td>
-                                <td>{{ $proceso->estado_proceso }}</td>
+                                <td style="{{ $colorEstado ? 'background-color: '.$colorEstado.';' : '' }}">{{ $proceso->estado_proceso }}</td>
+                                <td>{{ ($reglas['dias_corridos'] ?? null) !== null ? $reglas['dias_corridos'].' dias' : 'N/A' }}</td>
+                                <td style="text-align: center; {{ $colorDias ? 'background-color: '.$colorDias.';' : '' }}">{{ $reglas['texto_dias_restantes'] ?? 'Proceso sin notificar' }}</td>
+                                <td>
+                                    @if (($reglas['dias_restantes'] ?? null) === null)
+                                        <span class="badge text-bg-secondary">Sin notificar</span>
+                                    @elseif (($reglas['dias_restantes'] ?? 0) <= 2)
+                                        <span class="badge text-bg-danger">Rojo</span>
+                                    @elseif (($reglas['dias_restantes'] ?? 0) <= 5)
+                                        <span class="badge text-bg-warning">Amarillo</span>
+                                    @else
+                                        <span class="badge text-bg-success">Normal</span>
+                                    @endif
+                                </td>
                                 <td><span class="badge text-bg-{{ $proceso->proceso_antiguo ? 'warning' : 'light' }}">{{ $proceso->proceso_antiguo ? 'Si' : 'No' }}</span></td>
                                 <td><span class="badge text-bg-{{ $proceso->estado_registro === 'Activo' ? 'success' : 'secondary' }}">{{ $proceso->estado_registro }}</span></td>
                                 <td>
@@ -79,7 +97,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="9" class="text-center text-muted py-4">No hay procesos disciplinarios registrados.</td></tr>
+                            <tr><td colspan="12" class="text-center text-muted py-4">No hay procesos disciplinarios registrados.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
