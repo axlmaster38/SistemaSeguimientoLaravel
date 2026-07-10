@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Apelacion;
 use App\Models\Descargo;
 use App\Models\Prueba;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -18,7 +19,7 @@ class PruebaService
         ?int $procesoId = null
     ): LengthAwarePaginator {
         return Prueba::query()
-            ->with(['procesoDisciplinario.denuncia.estudiante', 'descargo'])
+            ->with(['procesoDisciplinario.denuncia.estudiante', 'descargo', 'apelacion'])
             ->when($estadoRegistro !== 'Todos', function ($query) use ($estadoRegistro): void {
                 $query->where('estado_registro', $estadoRegistro);
             })
@@ -100,9 +101,13 @@ class PruebaService
             $datos['proceso_disciplinario_id'] = Descargo::whereKey($datos['descargo_id'])->value('proceso_disciplinario_id');
         }
 
+        if (empty($datos['proceso_disciplinario_id']) && ! empty($datos['apelacion_id'])) {
+            $datos['proceso_disciplinario_id'] = Apelacion::whereKey($datos['apelacion_id'])->value('proceso_disciplinario_id');
+        }
+
         $datos['proceso_disciplinario_id'] = $datos['proceso_disciplinario_id'] ?: null;
         $datos['descargo_id'] = $datos['descargo_id'] ?: null;
-        $datos['apelacion_id'] = $datos['apelacion_id'] ?? null;
+        $datos['apelacion_id'] = $datos['apelacion_id'] ?: null;
 
         return $datos;
     }

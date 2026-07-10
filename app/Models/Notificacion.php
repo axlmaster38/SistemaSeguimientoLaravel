@@ -19,6 +19,7 @@ class Notificacion extends Model
         'fecha_2da_notificacion',
         'instancia',
         'archivo',
+        'estado_registro',
         'proceso_disciplinario_id',
         'sancion_id',
         'usuario_registra_id',

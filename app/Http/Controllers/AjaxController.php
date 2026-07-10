@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Escuela;
 use App\Models\ProcesoDisciplinario;
+use App\Models\Sancion;
 use App\Models\Zona;
 use Illuminate\Http\JsonResponse;
 
@@ -37,5 +38,16 @@ class AjaxController extends Controller
             ->get(['id', 'descripcion']);
 
         return response()->json($descargos);
+    }
+
+    public function sancionesPorProceso(ProcesoDisciplinario $proceso): JsonResponse
+    {
+        $sanciones = Sancion::query()
+            ->where('estado_registro', 'Activo')
+            ->whereHas('decision', fn ($query) => $query->where('proceso_disciplinario_id', $proceso->id))
+            ->orderByDesc('id')
+            ->get(['id', 'tipo_sancion', 'estado_sancion', 'decision_id']);
+
+        return response()->json($sanciones);
     }
 }

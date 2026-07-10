@@ -145,7 +145,7 @@ Reglas:
 - Solo se pueden registrar descargos para procesos disciplinarios activos.
 - No se puede inactivar un descargo si tiene pruebas activas asociadas.
 - Una prueba debe estar asociada al menos a un proceso disciplinario, descargo o apelacion.
-- En este sprint se habilita la asociacion de pruebas a proceso y descargo; apelaciones queda pendiente para su modulo.
+- En Sprint 12 se habilita tambien la asociacion de pruebas a apelaciones.
 - Si una prueba se asocia a un descargo y no se informa proceso, el sistema toma el proceso desde el descargo.
 - Si se informa proceso y descargo, el descargo debe pertenecer al proceso indicado.
 
@@ -201,6 +201,48 @@ Logica replicada desde Django:
 
 - Al crear o editar una sancion de `Primera Instancia`, el proceso pasa a `Fallo en primera instancia`.
 - Al crear o editar una sancion de `Segunda Instancia`, el proceso pasa a `Fallo en segunda instancia`.
+
+## Notificaciones y apelaciones
+
+En Sprint 12 se extiende `estado_registro` a:
+
+- `notificaciones`
+- `apelaciones`
+
+Reglas:
+
+- No se eliminan fisicamente notificaciones ni apelaciones.
+- La accion de eliminar se reemplaza por cambio de `estado_registro`.
+- `tipo_notificacion`, `instancia` y `tipo_apelacion` son campos funcionales del negocio.
+- `estado_registro` es el estado tecnico para activar o inactivar el registro.
+- Solo se pueden crear notificaciones para procesos o sanciones activas.
+- Una notificacion de tipo `Proceso` exige `proceso_disciplinario_id`.
+- Una notificacion de tipo `Sancion` exige `sancion_id`.
+- Una apelacion exige un proceso disciplinario activo.
+- No se puede inactivar una apelacion si tiene pruebas activas asociadas.
+- Las pruebas pueden asociarse a una apelacion activa.
+
+Choices replicados desde Django:
+
+- `tipo_notificacion`: Sancion, Proceso.
+- `instancia`: Primera Notificacion, Segunda Notificacion.
+- `tipo_apelacion`: Recurso de reposicion, Recurso de reposicion en subsidio de apelacion, Apelacion.
+
+Archivos de notificaciones:
+
+- Los archivos se almacenan en el disco `public`, carpeta `notificaciones`.
+- En base de datos se guarda solo la ruta relativa.
+- Formatos permitidos: `pdf`, `doc`, `docx`, `jpg`, `jpeg`, `png`.
+- Tamano maximo: 10 MB.
+- Al actualizar una notificacion, si no se carga archivo nuevo se conserva el anterior.
+- Si se reemplaza el archivo, se elimina el archivo anterior del storage.
+- No se eliminan archivos al inactivar una notificacion.
+- La descarga se realiza mediante ruta protegida por autenticacion.
+
+Logica replicada desde Django:
+
+- Al crear o editar una notificacion con instancia `Segunda Notificación`, se registra automaticamente `fecha_2da_notificacion`.
+- Al crear o editar una notificacion con instancia `Primera Notificación`, se limpia `fecha_2da_notificacion`.
 
 ## Compatibilidad
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePruebaRequest;
 use App\Http\Requests\UpdatePruebaRequest;
+use App\Models\Apelacion;
 use App\Models\Descargo;
 use App\Models\ProcesoDisciplinario;
 use App\Models\Prueba;
@@ -35,12 +36,22 @@ class PruebaController extends Controller
         return view('pruebas.index', compact('pruebas', 'buscar', 'estadoRegistro', 'tipoPrueba', 'procedencia', 'procesoId', 'procesos', 'tiposPrueba', 'procedencias'));
     }
 
-    public function create(): View
+    public function create(Request $request): View
     {
+        $apelacion = $request->filled('apelacion_id')
+            ? Apelacion::where('estado_registro', 'Activo')->find($request->integer('apelacion_id'))
+            : null;
+        $prueba = new Prueba([
+            'apelacion_id' => $apelacion?->id,
+            'proceso_disciplinario_id' => $apelacion?->proceso_disciplinario_id,
+            'procedencia' => $apelacion ? 'Apelacion' : null,
+        ]);
+
         return view('pruebas.create', [
-            'prueba' => new Prueba(),
+            'prueba' => $prueba,
             'procesos' => $this->procesosActivos(),
             'descargos' => collect(),
+            'apelaciones' => $this->apelacionesActivas($prueba),
         ]);
     }
 
@@ -70,6 +81,7 @@ class PruebaController extends Controller
                 })
                 ->orderByDesc('id')
                 ->get(),
+            'apelaciones' => $this->apelacionesActivas($prueba),
         ]);
     }
 
@@ -117,6 +129,17 @@ class PruebaController extends Controller
     private function procesosParaSelect()
     {
         return ProcesoDisciplinario::with('denuncia.estudiante')
+            ->orderByDesc('id')
+            ->get();
+    }
+
+    private function apelacionesActivas(?Prueba $prueba = null)
+    {
+        return Apelacion::with('procesoDisciplinario.denuncia.estudiante')
+            ->where('estado_registro', 'Activo')
+            ->when($prueba?->apelacion_id, function ($query) use ($prueba): void {
+                $query->orWhere('id', $prueba->apelacion_id);
+            })
             ->orderByDesc('id')
             ->get();
     }

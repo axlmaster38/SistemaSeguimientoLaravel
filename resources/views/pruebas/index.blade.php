@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
-        <div><h1 class="h3 mb-1">Pruebas</h1><div class="text-muted">Gestion de pruebas asociadas a procesos o descargos.</div></div>
+        <div><h1 class="h3 mb-1">Pruebas</h1><div class="text-muted">Gestion de pruebas asociadas a procesos, descargos o apelaciones.</div></div>
         <a href="{{ route('pruebas.create') }}" class="btn btn-primary"><i class="fa-solid fa-plus me-1"></i>Nuevo</a>
     </div>
     @if (session('success'))<div class="alert alert-success">{{ session('success') }}</div>@endif
@@ -27,7 +27,7 @@
             <div class="col-12 d-flex gap-2"><button type="submit" class="btn btn-outline-primary"><i class="fa-solid fa-magnifying-glass me-1"></i>Buscar</button><a href="{{ route('pruebas.index') }}" class="btn btn-outline-secondary">Limpiar</a></div>
         </form>
         <div class="table-responsive"><table class="table align-middle">
-            <thead><tr><th>Nombre</th><th>Tipo</th><th>Procedencia</th><th>Proceso</th><th>Descargo</th><th>Archivo</th><th>Fecha registro</th><th>Estado</th><th class="text-end">Acciones</th></tr></thead>
+            <thead><tr><th>Nombre</th><th>Tipo</th><th>Procedencia</th><th>Proceso</th><th>Descargo</th><th>Apelacion</th><th>Archivo</th><th>Fecha registro</th><th>Estado</th><th class="text-end">Acciones</th></tr></thead>
             <tbody>
                 @forelse ($pruebas as $prueba)
                     <tr>
@@ -36,6 +36,7 @@
                         <td>{{ $prueba->procedencia }}</td>
                         <td>{{ $prueba->proceso_disciplinario_id ? '#'.$prueba->proceso_disciplinario_id : 'N/A' }}</td>
                         <td>{{ $prueba->descargo_id ? '#'.$prueba->descargo_id : 'N/A' }}</td>
+                        <td>{{ $prueba->apelacion_id ? '#'.$prueba->apelacion_id : 'N/A' }}</td>
                         <td>@if ($prueba->archivo)<a href="{{ route('pruebas.archivo', $prueba) }}" class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-download me-1"></i>Descargar</a>@else N/A @endif</td>
                         <td>{{ $prueba->fecha_registro?->format('Y-m-d') ?? 'N/A' }}</td>
                         <td><span class="badge text-bg-{{ $prueba->estado_registro === 'Activo' ? 'success' : 'secondary' }}">{{ $prueba->estado_registro }}</span></td>
@@ -50,7 +51,7 @@
                         </div></td>
                     </tr>
                 @empty
-                    <tr><td colspan="9" class="text-center text-muted py-4">No hay pruebas registradas.</td></tr>
+                    <tr><td colspan="10" class="text-center text-muted py-4">No hay pruebas registradas.</td></tr>
                 @endforelse
             </tbody>
         </table></div>

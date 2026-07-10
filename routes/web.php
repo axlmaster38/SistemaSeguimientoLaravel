@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AjaxController;
+use App\Http\Controllers\ApelacionController;
 use App\Http\Controllers\CentroController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DenunciaController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\DescargoController;
 use App\Http\Controllers\DecisionController;
 use App\Http\Controllers\EscuelaController;
 use App\Http\Controllers\EstudianteController;
+use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\PeriodoAcademicoController;
 use App\Http\Controllers\ProcesoDisciplinarioController;
 use App\Http\Controllers\ProgramaController;
@@ -32,6 +34,7 @@ Route::middleware('autenticado')->group(function () {
     Route::get('/ajax/zonas/{zona}/centros', [AjaxController::class, 'centrosPorZona'])->name('ajax.zonas.centros');
     Route::get('/ajax/escuelas/{escuela}/programas', [AjaxController::class, 'programasPorEscuela'])->name('ajax.escuelas.programas');
     Route::get('/ajax/procesos/{proceso}/descargos', [AjaxController::class, 'descargosPorProceso'])->name('ajax.procesos.descargos');
+    Route::get('/ajax/procesos/{proceso}/sanciones', [AjaxController::class, 'sancionesPorProceso'])->name('ajax.procesos.sanciones');
     Route::resource('escuelas', EscuelaController::class)->except('destroy');
     Route::delete('escuelas/{escuela}', [EscuelaController::class, 'destroy'])
         ->middleware('rol:Administrador')
@@ -90,4 +93,18 @@ Route::middleware('autenticado')->group(function () {
     Route::delete('sanciones/{sancion}', [SancionController::class, 'destroy'])
         ->middleware('rol:Administrador')
         ->name('sanciones.destroy');
+    Route::resource('notificaciones', NotificacionController::class)
+        ->parameters(['notificaciones' => 'notificacion'])
+        ->except('destroy');
+    Route::get('notificaciones/{notificacion}/archivo', [NotificacionController::class, 'descargarArchivo'])
+        ->name('notificaciones.archivo');
+    Route::delete('notificaciones/{notificacion}', [NotificacionController::class, 'destroy'])
+        ->middleware('rol:Administrador')
+        ->name('notificaciones.destroy');
+    Route::resource('apelaciones', ApelacionController::class)
+        ->parameters(['apelaciones' => 'apelacion'])
+        ->except('destroy');
+    Route::delete('apelaciones/{apelacion}', [ApelacionController::class, 'destroy'])
+        ->middleware('rol:Administrador')
+        ->name('apelaciones.destroy');
 });

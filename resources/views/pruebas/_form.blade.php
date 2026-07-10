@@ -24,6 +24,16 @@
         </select>
         @error('descargo_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
     </div>
+    <div class="col-12">
+        <label for="apelacion_id" class="form-label">Apelacion</label>
+        <select id="apelacion_id" name="apelacion_id" class="form-select @error('apelacion_id') is-invalid @enderror">
+            <option value="">Seleccione una apelacion</option>
+            @foreach ($apelaciones as $apelacion)
+                <option value="{{ $apelacion->id }}" data-proceso="{{ $apelacion->proceso_disciplinario_id }}" @selected((int) old('apelacion_id', $prueba->apelacion_id) === $apelacion->id)>#{{ $apelacion->id }} - Proceso #{{ $apelacion->proceso_disciplinario_id }} - {{ $apelacion->procesoDisciplinario?->denuncia?->estudiante?->codigo_estu }} - {{ $apelacion->tipo_apelacion }}</option>
+            @endforeach
+        </select>
+        @error('apelacion_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+    </div>
     <div class="col-12"><label for="descripcion" class="form-label">Descripcion</label><textarea id="descripcion" name="descripcion" rows="5" class="form-control @error('descripcion') is-invalid @enderror">{{ old('descripcion', $prueba->descripcion) }}</textarea>@error('descripcion')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
     <div class="col-12">
         <label for="archivo" class="form-label">Archivo</label>
@@ -40,6 +50,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const proceso = document.getElementById('proceso_disciplinario_id');
             const descargo = document.getElementById('descargo_id');
+            const apelacion = document.getElementById('apelacion_id');
 
             const reset = (text) => {
                 descargo.innerHTML = '';
@@ -74,6 +85,13 @@
             };
 
             proceso.addEventListener('change', () => cargarDescargos(proceso.value));
+            apelacion.addEventListener('change', () => {
+                const selected = apelacion.options[apelacion.selectedIndex];
+                if (selected?.dataset.proceso && !proceso.value) {
+                    proceso.value = selected.dataset.proceso;
+                    cargarDescargos(proceso.value, descargo.dataset.selected);
+                }
+            });
 
             if (!proceso.value) {
                 reset('Seleccione un proceso primero');

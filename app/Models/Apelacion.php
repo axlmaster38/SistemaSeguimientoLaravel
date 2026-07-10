@@ -16,6 +16,7 @@ class Apelacion extends Model
     protected $fillable = [
         'motivo',
         'tipo_apelacion',
+        'estado_registro',
         'proceso_disciplinario_id',
         'usuario_registra_id',
         'usuario_actualiza_id',

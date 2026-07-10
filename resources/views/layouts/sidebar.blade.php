@@ -43,8 +43,12 @@
         <a class="nav-link rounded {{ request()->routeIs('sanciones.*') ? 'active' : '' }}" href="{{ route('sanciones.index') }}">
             <i class="fa-solid fa-triangle-exclamation me-2"></i>Sanciones
         </a>
-        <a class="nav-link rounded" href="#"><i class="fa-solid fa-envelope-open-text me-2"></i>Notificaciones</a>
-        <a class="nav-link rounded" href="#"><i class="fa-solid fa-scale-unbalanced-flip me-2"></i>Apelaciones</a>
+        <a class="nav-link rounded {{ request()->routeIs('notificaciones.*') ? 'active' : '' }}" href="{{ route('notificaciones.index') }}">
+            <i class="fa-solid fa-envelope-open-text me-2"></i>Notificaciones
+        </a>
+        <a class="nav-link rounded {{ request()->routeIs('apelaciones.*') ? 'active' : '' }}" href="{{ route('apelaciones.index') }}">
+            <i class="fa-solid fa-scale-unbalanced-flip me-2"></i>Apelaciones
+        </a>
 
         <div class="nav-title small text-uppercase mt-3 mb-1">Normatividad</div>
         <a class="nav-link rounded" href="#"><i class="fa-solid fa-book me-2"></i>Normatividades</a>
