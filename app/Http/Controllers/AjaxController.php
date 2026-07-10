@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Escuela;
+use App\Models\ProcesoDisciplinario;
 use App\Models\Zona;
 use Illuminate\Http\JsonResponse;
 
@@ -26,5 +27,15 @@ class AjaxController extends Controller
             ->get(['id', 'codigo_pro', 'nombre']);
 
         return response()->json($programas);
+    }
+
+    public function descargosPorProceso(ProcesoDisciplinario $proceso): JsonResponse
+    {
+        $descargos = $proceso->descargos()
+            ->where('estado_registro', 'Activo')
+            ->orderByDesc('id')
+            ->get(['id', 'descripcion']);
+
+        return response()->json($descargos);
     }
 }

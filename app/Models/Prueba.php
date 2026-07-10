@@ -18,6 +18,7 @@ class Prueba extends Model
         'descripcion',
         'procedencia',
         'archivo',
+        'estado_registro',
         'proceso_disciplinario_id',
         'descargo_id',
         'apelacion_id',

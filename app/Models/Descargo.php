@@ -15,6 +15,7 @@ class Descargo extends Model
 
     protected $fillable = [
         'descripcion',
+        'estado_registro',
         'proceso_disciplinario_id',
         'usuario_registra_id',
         'usuario_actualiza_id',

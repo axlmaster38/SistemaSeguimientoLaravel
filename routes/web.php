@@ -5,11 +5,13 @@ use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\CentroController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DenunciaController;
+use App\Http\Controllers\DescargoController;
 use App\Http\Controllers\EscuelaController;
 use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\PeriodoAcademicoController;
 use App\Http\Controllers\ProcesoDisciplinarioController;
 use App\Http\Controllers\ProgramaController;
+use App\Http\Controllers\PruebaController;
 use App\Http\Controllers\ZonaController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +29,7 @@ Route::middleware('autenticado')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/ajax/zonas/{zona}/centros', [AjaxController::class, 'centrosPorZona'])->name('ajax.zonas.centros');
     Route::get('/ajax/escuelas/{escuela}/programas', [AjaxController::class, 'programasPorEscuela'])->name('ajax.escuelas.programas');
+    Route::get('/ajax/procesos/{proceso}/descargos', [AjaxController::class, 'descargosPorProceso'])->name('ajax.procesos.descargos');
     Route::resource('escuelas', EscuelaController::class)->except('destroy');
     Route::delete('escuelas/{escuela}', [EscuelaController::class, 'destroy'])
         ->middleware('rol:Administrador')
@@ -61,4 +64,14 @@ Route::middleware('autenticado')->group(function () {
     Route::delete('procesos/{proceso}', [ProcesoDisciplinarioController::class, 'destroy'])
         ->middleware('rol:Administrador')
         ->name('procesos.destroy');
+    Route::resource('descargos', DescargoController::class)->except('destroy');
+    Route::delete('descargos/{descargo}', [DescargoController::class, 'destroy'])
+        ->middleware('rol:Administrador')
+        ->name('descargos.destroy');
+    Route::resource('pruebas', PruebaController::class)->except('destroy');
+    Route::get('pruebas/{prueba}/archivo', [PruebaController::class, 'descargarArchivo'])
+        ->name('pruebas.archivo');
+    Route::delete('pruebas/{prueba}', [PruebaController::class, 'destroy'])
+        ->middleware('rol:Administrador')
+        ->name('pruebas.destroy');
 });

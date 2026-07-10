@@ -131,6 +131,35 @@ Estados funcionales sugeridos para `estado_proceso`:
 - Cerrado
 - Archivado
 
+## Descargos y pruebas
+
+En Sprint 10 se extiende `estado_registro` a:
+
+- `descargos`
+- `pruebas`
+
+Reglas:
+
+- No se eliminan fisicamente descargos ni pruebas.
+- La accion de eliminar se reemplaza por cambio de `estado_registro`.
+- Solo se pueden registrar descargos para procesos disciplinarios activos.
+- No se puede inactivar un descargo si tiene pruebas activas asociadas.
+- Una prueba debe estar asociada al menos a un proceso disciplinario, descargo o apelacion.
+- En este sprint se habilita la asociacion de pruebas a proceso y descargo; apelaciones queda pendiente para su modulo.
+- Si una prueba se asocia a un descargo y no se informa proceso, el sistema toma el proceso desde el descargo.
+- Si se informa proceso y descargo, el descargo debe pertenecer al proceso indicado.
+
+Archivos de pruebas:
+
+- Los archivos se almacenan en el disco `public`, carpeta `pruebas`.
+- En base de datos se guarda solo la ruta relativa.
+- Formatos permitidos: `pdf`, `doc`, `docx`, `jpg`, `jpeg`, `png`.
+- Tamano maximo: 10 MB.
+- Al actualizar una prueba, si no se carga archivo nuevo se conserva el anterior.
+- Si se reemplaza el archivo, se elimina el archivo anterior del storage.
+- No se eliminan archivos al inactivar una prueba.
+- La descarga se realiza mediante ruta protegida por autenticacion.
+
 ## Compatibilidad
 
 Las decisiones de implementacion deben mantenerse compatibles con:
