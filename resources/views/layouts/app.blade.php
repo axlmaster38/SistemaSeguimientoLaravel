@@ -7,25 +7,49 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
     <style>
+        :root {
+            --unad-blue: #075b7a;
+            --sidebar-black: #000000;
+            --sidebar-active: #1f2937;
+            --sidebar-hover: #111827;
+        }
+
         body {
             background: #f5f7fb;
+        }
+
+        .main-navbar {
+            background-color: var(--unad-blue) !important;
+        }
+
+        .navbar-logo {
+            display: block;
+            width: auto;
+            height: 42px;
+            max-width: 145px;
+            object-fit: contain;
+            flex-shrink: 0;
         }
 
         .app-sidebar {
             width: 280px;
             min-height: calc(100vh - 56px);
-            background: #172033;
+            background: var(--sidebar-black);
         }
 
         .app-sidebar .nav-link,
         .app-sidebar .nav-title {
-            color: #d9e2f2;
+            color: #e5e7eb;
         }
 
-        .app-sidebar .nav-link:hover,
+        .app-sidebar .nav-link:hover {
+            color: #ffffff;
+            background: var(--sidebar-hover);
+        }
+
         .app-sidebar .nav-link.active {
             color: #ffffff;
-            background: rgba(255, 255, 255, .1);
+            background: var(--sidebar-active);
         }
 
         .content-wrapper {
@@ -36,6 +60,18 @@
             .app-sidebar {
                 width: 100%;
                 min-height: auto;
+            }
+
+            .navbar-logo {
+                height: 34px;
+                max-width: 110px;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .navbar-logo {
+                height: 30px;
+                max-width: 90px;
             }
         }
     </style>

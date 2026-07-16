@@ -105,9 +105,9 @@ class PruebaService
             $datos['proceso_disciplinario_id'] = Apelacion::whereKey($datos['apelacion_id'])->value('proceso_disciplinario_id');
         }
 
-        $datos['proceso_disciplinario_id'] = $datos['proceso_disciplinario_id'] ?: null;
-        $datos['descargo_id'] = $datos['descargo_id'] ?: null;
-        $datos['apelacion_id'] = $datos['apelacion_id'] ?: null;
+        $datos['proceso_disciplinario_id'] = ! empty($datos['proceso_disciplinario_id']) ? $datos['proceso_disciplinario_id'] : null;
+        $datos['descargo_id'] = ! empty($datos['descargo_id']) ? $datos['descargo_id'] : null;
+        $datos['apelacion_id'] = ! empty($datos['apelacion_id']) ? $datos['apelacion_id'] : null;
 
         return $datos;
     }

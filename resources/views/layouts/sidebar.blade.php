@@ -1,7 +1,7 @@
 <aside class="app-sidebar p-3">
     <nav class="nav flex-column gap-1">
         <a class="nav-link rounded {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
-            <i class="fa-solid fa-gauge-high me-2"></i>Dashboard
+            <i class="fa-solid fa-gauge-high me-2"></i>Resumen General
         </a>
 
         <div class="nav-title small text-uppercase mt-3 mb-1">Gestion Academica</div>

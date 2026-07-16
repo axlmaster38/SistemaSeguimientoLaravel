@@ -1,8 +1,19 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<nav class="navbar navbar-dark main-navbar px-3 py-2">
     <div class="container-fluid">
         <a class="navbar-brand fw-semibold" href="{{ route('dashboard') }}">
-            <i class="fa-solid fa-scale-balanced me-2"></i>SME
+            <div class="d-flex align-items-center gap-3 brand-wrapper">
+            <img
+                src="{{ asset('images/logo-unad3.png') }}"
+                alt="Logo UNAD"
+                class="navbar-logo"
+            >
+
+            <div class="brand-title">
+                Bienvenido al Sistema de Seguimiento y Monitoreo de Procesos Disciplinarios a Estudiantes
+            </div>
+        </div>
         </a>
+        
 
         <div class="ms-auto d-flex align-items-center gap-3 text-white">
             <div class="d-none d-sm-block text-end">

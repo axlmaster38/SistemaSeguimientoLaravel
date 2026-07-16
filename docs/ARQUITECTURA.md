@@ -329,3 +329,39 @@ Exportacion:
 - Laravel actual no tiene dependencia instalada para XLSX/PDF.
 - Para mantener compatibilidad sin agregar paquetes, se implementa CSV nativo para procesos historicos.
 - XLSX/PDF queda como mejora futura condicionada a aprobar una dependencia Composer compatible con PHP 8.4.16.
+
+## DESPLIEGUE EN PRODUCCIÓN
+
+El sistema debe desplegarse como aplicación Laravel estándar, manteniendo la raíz pública en la carpeta `public`.
+
+Compatibilidad objetivo:
+
+- Apache 2.4.67.
+- PHP 8.4.16.
+- MariaDB 11.8.6.
+
+Variables obligatorias en producción:
+
+- `APP_ENV=production`.
+- `APP_DEBUG=false`.
+- `APP_URL` con el dominio real.
+- `DB_CONNECTION=mariadb`.
+- `FILESYSTEM_DISK=public`.
+- `SESSION_DRIVER=database`.
+- `CACHE_STORE=database`.
+- `QUEUE_CONNECTION=database`.
+
+Reglas de despliegue:
+
+- El DocumentRoot de Apache debe apuntar a `public`.
+- No se debe exponer la raíz completa del proyecto desde el servidor web.
+- No se debe ejecutar `migrate:fresh` en ambientes con datos reales.
+- Los comandos de migración y seed deben ejecutarse con `--force` en producción.
+- `storage` y `bootstrap/cache` deben tener permisos de escritura para PHP/Apache.
+- `php artisan storage:link` debe ejecutarse para habilitar descargas de archivos guardados en el disco `public`.
+- Después de configurar `.env`, se debe ejecutar `php artisan optimize`.
+
+Documentación operativa:
+
+- `docs/INSTALACION_PRODUCCION.md`.
+- `docs/CHECKLIST_ENTREGA.md`.

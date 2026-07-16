@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard | SME')
+@section('title', 'Resumen General | Sistema De Monitorieo Estudiantil')
 
 @section('content')
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
-            <h1 class="h3 mb-1">Dashboard</h1>
+            <h1 class="h3 mb-1">Resumen General</h1>
             <div class="text-muted">Resumen inicial del sistema disciplinario.</div>
         </div>
     </div>

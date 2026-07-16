@@ -100,8 +100,8 @@ class NotificacionService
             $datos['proceso_disciplinario_id'] = null;
         }
 
-        $datos['proceso_disciplinario_id'] = $datos['proceso_disciplinario_id'] ?: null;
-        $datos['sancion_id'] = $datos['sancion_id'] ?: null;
+        $datos['proceso_disciplinario_id'] = ! empty($datos['proceso_disciplinario_id']) ? $datos['proceso_disciplinario_id'] : null;
+        $datos['sancion_id'] = ! empty($datos['sancion_id']) ? $datos['sancion_id'] : null;
 
         return $datos;
     }

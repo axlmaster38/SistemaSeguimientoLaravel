@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Apelacion;
 use App\Models\Descargo;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -31,7 +32,11 @@ class StorePruebaRequest extends FormRequest
                 'integer',
                 Rule::exists('descargos', 'id')->where('estado_registro', 'Activo'),
             ],
-            'apelacion_id' => ['nullable', 'integer', 'exists:apelaciones,id'],
+            'apelacion_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('apelaciones', 'id')->where('estado_registro', 'Activo'),
+            ],
         ];
     }
 
@@ -43,7 +48,7 @@ class StorePruebaRequest extends FormRequest
             $apelacionId = $this->input('apelacion_id');
 
             if (! $procesoId && ! $descargoId && ! $apelacionId) {
-                $validator->errors()->add('proceso_disciplinario_id', 'La prueba debe asociarse al menos a un proceso o descargo.');
+                $validator->errors()->add('proceso_disciplinario_id', 'La prueba debe asociarse al menos a un proceso, descargo o apelación.');
                 return;
             }
 
@@ -52,6 +57,23 @@ class StorePruebaRequest extends FormRequest
 
                 if ($descargo && (int) $descargo->proceso_disciplinario_id !== (int) $procesoId) {
                     $validator->errors()->add('descargo_id', 'El descargo seleccionado no pertenece al proceso indicado.');
+                }
+            }
+
+            if ($procesoId && $apelacionId) {
+                $apelacion = Apelacion::find($apelacionId);
+
+                if ($apelacion && (int) $apelacion->proceso_disciplinario_id !== (int) $procesoId) {
+                    $validator->errors()->add('apelacion_id', 'La apelación seleccionada no pertenece al proceso indicado.');
+                }
+            }
+
+            if ($descargoId && $apelacionId) {
+                $descargo = Descargo::find($descargoId);
+                $apelacion = Apelacion::find($apelacionId);
+
+                if ($descargo && $apelacion && (int) $descargo->proceso_disciplinario_id !== (int) $apelacion->proceso_disciplinario_id) {
+                    $validator->errors()->add('apelacion_id', 'La apelación seleccionada no pertenece al proceso del descargo indicado.');
                 }
             }
         });
