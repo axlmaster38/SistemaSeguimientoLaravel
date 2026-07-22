@@ -52,6 +52,37 @@
             background: var(--sidebar-active);
         }
 
+        .app-sidebar .sidebar-toggle {
+            width: 100%;
+            border: 0;
+            background: transparent;
+            text-align: left;
+        }
+
+        .app-sidebar .sidebar-toggle:not(.collapsed) {
+            color: #ffffff;
+            background: var(--sidebar-active);
+        }
+
+        .app-sidebar .sidebar-sub-link {
+            padding-left: 2.25rem;
+            font-size: .95rem;
+        }
+
+        .app-sidebar .sidebar-chevron {
+            font-size: .75rem;
+        }
+
+        .app-sidebar .sidebar-toggle .sidebar-chevron-closed,
+        .app-sidebar .sidebar-toggle.collapsed .sidebar-chevron-open {
+            display: none;
+        }
+
+        .app-sidebar .sidebar-toggle.collapsed .sidebar-chevron-closed,
+        .app-sidebar .sidebar-toggle .sidebar-chevron-open {
+            display: inline-block;
+        }
+
         .content-wrapper {
             min-height: calc(100vh - 56px);
         }
