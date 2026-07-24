@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\AcercaSistemaController;
 use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\ApelacionController;
 use App\Http\Controllers\CentroController;
@@ -11,12 +12,15 @@ use App\Http\Controllers\DecisionController;
 use App\Http\Controllers\EscuelaController;
 use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\NotificacionController;
+use App\Http\Controllers\ArticuloController;
+use App\Http\Controllers\NormatividadController;
 use App\Http\Controllers\PeriodoAcademicoController;
 use App\Http\Controllers\ProcesoDisciplinarioController;
 use App\Http\Controllers\ProgramaController;
 use App\Http\Controllers\PruebaController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\SancionController;
+use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\ZonaController;
 use Illuminate\Support\Facades\Route;
 
@@ -41,6 +45,23 @@ Route::middleware('autenticado')->group(function () {
     Route::get('reportes/procesos-historicos', [ReporteController::class, 'procesosHistoricos'])->name('reportes.procesos-historicos');
     Route::get('reportes/procesos-historicos/exportar-csv', [ReporteController::class, 'exportarProcesosHistoricosCsv'])->name('reportes.procesos-historicos.exportar-csv');
     Route::get('reportes/procesos-historicos/{proceso}', [ReporteController::class, 'procesoHistoricoDetalle'])->name('reportes.procesos-historicos.show');
+    Route::get('administracion/acerca-del-sistema', [AcercaSistemaController::class, 'index'])->name('administracion.acerca');
+    Route::resource('usuarios', UsuarioController::class)
+        ->middleware('rol:Administrador')
+        ->except('destroy');
+    Route::delete('usuarios/{usuario}', [UsuarioController::class, 'destroy'])
+        ->middleware('rol:Administrador')
+        ->name('usuarios.destroy');
+    Route::resource('normatividades', NormatividadController::class)
+        ->parameters(['normatividades' => 'normatividad'])
+        ->except('destroy');
+    Route::delete('normatividades/{normatividad}', [NormatividadController::class, 'destroy'])
+        ->middleware('rol:Administrador')
+        ->name('normatividades.destroy');
+    Route::resource('articulos', ArticuloController::class)->except('destroy');
+    Route::delete('articulos/{articulo}', [ArticuloController::class, 'destroy'])
+        ->middleware('rol:Administrador')
+        ->name('articulos.destroy');
     Route::resource('escuelas', EscuelaController::class)->except('destroy');
     Route::delete('escuelas/{escuela}', [EscuelaController::class, 'destroy'])
         ->middleware('rol:Administrador')

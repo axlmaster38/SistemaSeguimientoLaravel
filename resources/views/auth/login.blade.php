@@ -23,8 +23,9 @@
         <div class="row justify-content-center">
             <div class="col-12 login-panel">
                 <div class="text-center mb-4">
-                    <div class="display-6 fw-semibold text-primary">SME</div>
-                    <div class="text-muted">Sistema de Seguimiento</div>
+                    <div class="display-6 "><img class="navbar-logo" src="{{ asset('images/logoUnad4.png') }}" width="200" alt=""></div>
+                    <div class="display-6 fw-semibold " style="color: #075b7a;important!">SME</div>
+                    <div class="text-muted">Sistema de Monitoreo de Estudiantes</div>
                 </div>
 
                 <div class="card border-0 shadow-sm">
@@ -69,7 +70,7 @@
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-primary w-100">
+                            <button type="submit" class="btn btn-primary w-100" style="background-color: #075b7a; border-color: #075b7a;"|>
                                 <i class="fa-solid fa-right-to-bracket me-2"></i>Entrar
                             </button>
                         </form>

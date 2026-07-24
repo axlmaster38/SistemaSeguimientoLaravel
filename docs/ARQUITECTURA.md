@@ -365,3 +365,31 @@ Documentación operativa:
 
 - `docs/INSTALACION_PRODUCCION.md`.
 - `docs/CHECKLIST_ENTREGA.md`.
+
+## CRUD de Normatividades y Artículos
+
+En el sprint final se implementan los módulos de Normatividades y Artículos siguiendo el patrón de Controllers, FormRequests, Services y vistas Blade usado en los CRUD académicos y disciplinarios.
+
+Normatividades:
+
+- Tabla: `normatividades`.
+- Modelo reutilizado: `App\Models\Normatividad`.
+- Campos usados: `no_acuerdo`, `descripcion`, `fecha_norma`, `usuario_registra_id`, `usuario_actualiza_id`, `fecha_registro`, `fecha_actualiza`, `estado_registro`.
+- La eliminación es lógica mediante `estado_registro`.
+- No se permite inactivar una normatividad con artículos activos asociados.
+
+Artículos:
+
+- Tabla: `articulos`.
+- Modelo reutilizado: `App\Models\Articulo`.
+- Campos usados: `no_articulo`, `descripcion`, `capitulo`, `literal`, `normatividad_id`, `usuario_registra_id`, `usuario_actualiza_id`, `fecha_registro`, `fecha_actualiza`, `estado_registro`.
+- Cada artículo pertenece a una normatividad mediante `normatividad_id`.
+- La eliminación es lógica mediante `estado_registro`.
+- Se evita duplicar `no_articulo` dentro de una misma normatividad.
+- No se alteran las relaciones existentes con procesos disciplinarios mediante `articulo_proceso`.
+
+Permisos:
+
+- Administrador puede listar, crear, ver, editar, activar e inactivar.
+- Operador puede listar, crear, ver y editar.
+- Las rutas de activación/inactivación quedan protegidas con `rol:Administrador`.

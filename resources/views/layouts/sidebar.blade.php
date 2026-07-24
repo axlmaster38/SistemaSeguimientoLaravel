@@ -1,4 +1,8 @@
 @php
+    $rolUsuario = session('rol_usuario');
+    $puedeVerUsuarios = $rolUsuario === 'Administrador';
+    $puedeVerAcerca = in_array($rolUsuario, ['Administrador', 'Operador'], true);
+
     $gestionAcademicaOpen = request()->routeIs(
         'escuelas.*',
         'programas.*',
@@ -20,6 +24,7 @@
     );
 
     $reportesOpen = request()->routeIs('reportes.*');
+    $administracionOpen = request()->routeIs('usuarios.*', 'administracion.*');
 @endphp
 
 <aside class="app-sidebar p-3">
@@ -139,10 +144,44 @@
         </div>
 
         <div class="nav-title small text-uppercase mt-3 mb-1">Normatividad</div>
-        <a class="nav-link rounded" href="#"><i class="fa-solid fa-book me-2"></i>Normatividades</a>
-        <a class="nav-link rounded" href="#"><i class="fa-solid fa-section me-2"></i>Artículos</a>
+        <a class="nav-link rounded {{ request()->routeIs('normatividades.*') ? 'active' : '' }}" href="{{ route('normatividades.index') }}">
+            <i class="fa-solid fa-book me-2"></i>Normatividades
+        </a>
+        <a class="nav-link rounded {{ request()->routeIs('articulos.*') ? 'active' : '' }}" href="{{ route('articulos.index') }}">
+            <i class="fa-solid fa-section me-2"></i>Artículos
+        </a>
 
-        <div class="nav-title small text-uppercase mt-3 mb-1">General</div>
-        <a class="nav-link rounded" href="#"><i class="fa-solid fa-gear me-2"></i>Configuración</a>
+        @if ($puedeVerUsuarios || $puedeVerAcerca)
+            <div class="nav-title small text-uppercase mt-3 mb-1">General</div>
+            <button
+                class="nav-link sidebar-toggle rounded d-flex align-items-center justify-content-between {{ $administracionOpen ? '' : 'collapsed' }}"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#sidebarAdministracion"
+                aria-expanded="{{ $administracionOpen ? 'true' : 'false' }}"
+                aria-controls="sidebarAdministracion"
+            >
+                <span><i class="fa-solid fa-gear me-2"></i>Administración</span>
+                <span class="sidebar-chevron">
+                    <i class="fa-solid fa-chevron-right sidebar-chevron-closed"></i>
+                    <i class="fa-solid fa-chevron-down sidebar-chevron-open"></i>
+                </span>
+            </button>
+            <div id="sidebarAdministracion" class="collapse {{ $administracionOpen ? 'show' : '' }}" data-bs-parent="#sidebarAccordion">
+                <div class="nav flex-column gap-1 py-1">
+                    @if ($puedeVerUsuarios)
+                        <a class="nav-link sidebar-sub-link rounded {{ request()->routeIs('usuarios.*') ? 'active' : '' }}" href="{{ route('usuarios.index') }}">
+                            <i class="fa-solid fa-user me-2"></i>Usuarios
+                        </a>
+                    @endif
+
+                    @if ($puedeVerAcerca)
+                        <a class="nav-link sidebar-sub-link rounded {{ request()->routeIs('administracion.acerca') ? 'active' : '' }}" href="{{ route('administracion.acerca') }}">
+                            <i class="fa-solid fa-circle-info me-2"></i>Acerca del Sistema
+                        </a>
+                    @endif
+                </div>
+            </div>
+        @endif
     </nav>
 </aside>
