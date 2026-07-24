@@ -143,6 +143,39 @@ Resultado de revision:
 - No se implementaron conteos nuevos de dashboard porque no existen como regla en Django.
 - No se creo un calculo independiente de `dias_vencidos` porque Django no lo define; solo calcula `dias_restantes`.
 
+## Alertas del Resumen General
+
+Implementación Laravel:
+
+- `app/Services/AlertaDashboardService.php`
+- `app/Http/Controllers/DashboardController.php`
+- `resources/views/dashboard/index.blade.php`
+
+Criterio de procesos:
+
+- Se reutiliza `ReglasNegocioDisciplinarioService::calcularProceso`.
+- La alerta se muestra cuando `dias_restantes` es menor o igual a `3`.
+- El cálculo de días se mantiene en días hábiles de lunes a viernes.
+- La fecha límite sigue siendo la fecha base de la última notificación más `10` días hábiles.
+- Se excluyen procesos con `estado_registro = Inactivo`.
+- Se excluyen estados cerrados o finalizados: `Proceso Cerrado`, `Sanción cumplida`, `Sancion cumplida`, `Cerrado`, `Finalizado`, `Archivado`.
+- Se muestran máximo `5` procesos, ordenados primero por menor cantidad de días restantes y luego por fecha límite.
+
+Criterio de apelaciones:
+
+- No se implementa cálculo de vencimiento porque no existe una regla real documentada en Django ni en los servicios actuales de Laravel.
+- No se encontró una fecha inicial ni un plazo definido para apelaciones.
+- El Resumen General muestra la categoría como pendiente de definición para evitar cálculos arbitrarios.
+
+Criterio de sanciones:
+
+- Se reutiliza `ReglasNegocioDisciplinarioService::calcularSancion`.
+- La alerta se muestra cuando `meses_restantes` es menor o igual a `1`.
+- Se incluyen sanciones vencidas que continúan activas.
+- Se excluyen sanciones con `estado_registro = Inactivo`.
+- Se excluyen sanciones con estado `Finalizada`, `Finalizado`, `Inactiva` o `Inactivo`.
+- Se muestran máximo `5` sanciones, ordenadas primero por menor cantidad de meses restantes y luego por fecha final.
+
 ## REPORTES E HISTORICOS MIGRADOS
 
 Origen Django:

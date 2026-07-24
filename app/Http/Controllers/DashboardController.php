@@ -8,10 +8,15 @@ use App\Models\Estudiante;
 use App\Models\Notificacion;
 use App\Models\ProcesoDisciplinario;
 use App\Models\Sancion;
+use App\Services\AlertaDashboardService;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
+    public function __construct(private readonly AlertaDashboardService $alertaDashboardService)
+    {
+    }
+
     public function index(): View
     {
         return view('dashboard.index', [
@@ -23,6 +28,7 @@ class DashboardController extends Controller
                 'apelaciones' => Apelacion::count(),
                 'notificaciones' => Notificacion::count(),
             ],
+            'alertas' => $this->alertaDashboardService->obtenerAlertas(),
         ]);
     }
 }
